@@ -1,0 +1,46 @@
+Program start
+
+// Menu loop
+Loop 
+
+//Increases difficulty the lower it is
+set variable difficulty to 
+set variable amount of sides to 3
+set variable max sides to
+
+Determine distance between ball and player characters
+Determine which player character is closest to the ball
+
+// Game loop
+Loop until escape key is pressed or 2 players are hit:
+    // When 
+    If seconds elapsed modulo difficulty equals 0 and amount of sides is less than max sides then:
+        Increment amount of sides
+        
+        //Decrementing this variable increases the difficulty as opposed to lowering it
+        //TODO: make this a little more intuitive
+        Decrement difficulty variable
+    
+    //Gravity loop
+    Loop until ball hits segment or reaches centerpoint of player character:
+        If any player presses clockwise rotation key then rotate said player character clockwise
+        If any player presses counter clockwise rotation key then rotate said player character counter clockwise
+        Draw players with amount of sides
+        Move ball towards nearest player in the form of gravity
+        Draw ball
+    
+    If ball hits player segment and owner of segment is rotating clockwise then:
+        set nearest player to the nearest player above the player
+    else if ball hits player segment and owner of segment is rotating counter clockwise then:
+        set nearest player to the nearest player below the player
+    else:
+        destroy player character that was hit
+    
+//Pausing
+If escape key is pressed then:
+    Display pause menu
+    Do nothing until escape key is pressed
+    Return to Game loop
+
+If 2 players are hit then:
+    Display game over screen
