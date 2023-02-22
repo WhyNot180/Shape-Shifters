@@ -52,9 +52,15 @@ Declare variable last recorded time
 
 Declare boolean frame gate
 
-Declare and set variable number of missing sides to 0
+Declare and set variable max number of missing sides to 1
 
 Declare variable difficulty modulo
+
+Declare variable missing sides
+
+Declare and set dynamic array player 1 sides 1-max sides to 0
+Declare and set dynamic array player 2 sides 1-max sides to 0
+Declare and set dynamic array player 3 sides 1-max sides to 0
 
 // Game loop
 Loop until escape key is pressed or 2 players are hit:
@@ -73,7 +79,7 @@ Loop until escape key is pressed or 2 players are hit:
             Increment strength of gravity
 
         else if number of missing sides is less than amount of sides minus 1:
-            Increment number of missing sides
+            Increment max number of missing sides
 
         //Decrementing this variable increases the difficulty as opposed to lowering it
         //TODO: make this a little more intuitive
@@ -81,7 +87,14 @@ Loop until escape key is pressed or 2 players are hit:
 
         Set last recorded time to seconds elapsed
     
-    
+    Set missing sides to random number between 1 and max number of missing sides
+
+    loop until i is equal to missing sides:
+        Declare and set variable side missing to random number between 1 and amount of sides
+
+        If variable in place of side missing in player 1 sides is not equal to 1 then:
+            Set variable in place of side missing in player 1 sides to 1 
+        Increment i
 
     //Gravity loop
     Loop until ball hits segment or reaches centerpoint of player character:
