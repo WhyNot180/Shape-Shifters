@@ -101,8 +101,11 @@ Used both in singleplayer and multiplayer
 
 ## Physics
 ### Shape
-* how do we handle collisions between two people in multiplayer
-	> just an elastic collision?
+* How are collisions handled between two shapes in multiplayer?
+	> * Elastic collisions:
+	>	* 
+	>	*
+	> * 
 * shape should be pulled towards the centre of the map when going out of bounds
 	> should not be affected by gravity while in bounds
 	> * see "Spacewar"
