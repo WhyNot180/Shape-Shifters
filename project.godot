@@ -13,15 +13,21 @@ _global_script_classes=[ {
 "class": "ShapePoints",
 "language": "GDScript",
 "path": "res://ShapePoints.gd"
+}, {
+"base": "CollisionPolygon2D",
+"class": "ShapePoints2",
+"language": "GDScript",
+"path": "res://ShapePoints2.gd"
 } ]
 _global_script_class_icons={
-"ShapePoints": ""
+"ShapePoints": "",
+"ShapePoints2": ""
 }
 
 [application]
 
 config/name="twisted-pong"
-run/main_scene="res://images/Label.tscn"
+run/main_scene="res://PlayerShape.tscn"
 config/icon="res://icon.png"
 
 [display]

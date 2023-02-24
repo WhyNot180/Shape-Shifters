@@ -1,5 +1,5 @@
-extends ConvexPolygonShape2D
-class_name ShapePoints
+extends CollisionPolygon2D
+class_name ShapePoints2
 
 # how are global properties implemented in Godot?
 # There should be a `radius` property for this script for the shape's radius.
@@ -27,12 +27,16 @@ var radius: int = 10;
 #	func set_y(value):
 #		m_y = value
 
+func _ready():
+#	change_shape(6)
+	print_points()
+
 func _init():
 	pass # plz setup constructor
 
 # connect to difficulty change signal
 func change_shape(sides: int) -> void:
-	set_point_cloud(generate_points(sides))
+	set_polygon(generate_points(sides))
 
 func find_point(sides, pointID) -> Vector2:
 	var x: float = cos((2 * PI * pointID) / sides) * radius
@@ -41,12 +45,12 @@ func find_point(sides, pointID) -> Vector2:
 
 func generate_points(sides: int) -> PoolVector2Array:
 	var points := PoolVector2Array()
-	for point in range(sides - 1):
+	for point in range(sides):
 		var coordinates := find_point(sides, point)
 		points.append(coordinates)
 	return points
 	
 func print_points() -> void:
-	var point_cloud := get_points()
+	var point_cloud := get_polygon()
 	for point in point_cloud:
 		print("X: %.0f, Y: %.0f" % [point.x, point.y])
