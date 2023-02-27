@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "ShapePoints2",
 "language": "GDScript",
 "path": "res://ShapePoints2.gd"
+}, {
+"base": "Label",
+"class": "Stopwatch",
+"language": "GDScript",
+"path": "res://score player 1.gd"
 } ]
 _global_script_class_icons={
 "ShapePoints": "",
-"ShapePoints2": ""
+"ShapePoints2": "",
+"Stopwatch": ""
 }
 
 [application]
