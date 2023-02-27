@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=3]
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2( -4, -3 )
+build_mode = 1
+polygon = PoolVector2Array( 10, 0, 5, 9, -5, 9, -10, 0, -5, -9, 5, -9 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.768627, 0.0862745, 0.0862745, 1 )
