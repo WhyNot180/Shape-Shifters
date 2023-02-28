@@ -6,19 +6,18 @@ onready var shape = get_node("Polygon2D")
 
 export (int) var radius = 25 # pixels
 # making this stupidly large still doesn't do all too much
-export (float) var collision_safe_margin: float = radius # pixels
-export (float) var max_velocity = 400 # pixels/second
-export (float) var player_accel = 1000 # pixels/second^2
+export (float) var collision_safe_margin: float = radius as float # pixels
+export (float) var max_velocity = 400.0 # pixels/second
+export (float) var player_accel = 1000.0 # pixels/second^2
 export (float) var max_rot_velocity = 10 * (2 * PI) # radians/s clockwise-positive 
 export (float) var player_rot_accel = 2 * PI # radians/s^2 clockwise-positive
 # 1/sqrt(seconds) to decelerate
-export (float) var player_auto_decel_scale = 4 # 1/sqrt(seconds)
+export (float) var player_auto_decel_scale = 4.0 # 1/sqrt(seconds)
 # find out what unit this is
-export (float) var player_rot_auto_decel_scale = 1 # unit here
+export (float) var player_rot_auto_decel_scale = 1.0 # unit here
 
-var sides: int = 3 # start at triangle
+var cur_sides: int = 3 # start at triangle
 var cur_velocity := Vector2()
-var accel_dir := Vector2()
 var rot_velocity := 0.0 # radians/s clockwise-positive
 
 # clockwise-positive
@@ -30,11 +29,8 @@ func _init():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set("collision/safe_margin", collision_safe_margin)
-	change_shape(sides) # create triangle
+	change_shape(cur_sides) # create triangle
 	print_points()
-
-func _process(delta):
-	pass
 
 func _physics_process(delta):
 	# add xbox controls?
@@ -76,17 +72,18 @@ func _physics_process(delta):
 		rot_velocity += error * player_rot_auto_decel_scale * delta
 	
 	# apply velocity and rotation
+# warning-ignore:return_value_discarded
 	move_and_slide(cur_velocity) # do not multiply delta by velocity
 	rotate(rot_velocity * delta) # do multiply delta by velocity
 
 
 func on_difficulty_change():
 	# will need adjustment
-	sides += 1
+	cur_sides += 1
 	radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
 	player_accel *= 1.1 # not necessary if the shape doesn't change size
 	max_velocity *= 1.1 # see above
-	change_shape(sides)
+	change_shape(cur_sides)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
