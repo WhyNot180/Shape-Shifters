@@ -1,28 +1,20 @@
 extends Node2D
 
-signal MORE_SIDES
+signal MORE_SIDES # should be sent from Stopwatch
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var Ball = load("res://Ball.tscn")
 #var Player = load("res://Player.tscn")
 
+# should all be handled from stopwatch
 var difficulty = 15
-
 var difficulty_modulo
-
 var seconds_elapsed = 0
 var last_recorded_time = 0
-
 var amount_sides = 3
-
 var missing_sides = 1
 
 var gravity = 500
-
-var gravity_areas = []
-var gravity_area
+var gravity_area # should be part of player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -52,10 +44,12 @@ func timer_timeout():
 				print("entered default")
 		if(difficulty != 1): difficulty -= 1
 
+
 # temporary
 func _process(delta):
-	gravity_area.set_position(get_node("Player").position)
+	gravity_area.set_position(get_node ("Player").position)
 	# should make gravity a child of Player (put in the player scene)
+
 
 func _unhandled_input(event):
 	# temporary
@@ -65,6 +59,7 @@ func _unhandled_input(event):
 			add_child(b)
 			b.set_position(event.position)
 			emit_signal("MORE_SIDES")
+
 
 func _on_Gravity_change_grav(strength):
 	pass # Replace with function body.
