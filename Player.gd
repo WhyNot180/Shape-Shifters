@@ -57,13 +57,13 @@ func _physics_process(delta):
 	if accel_dir.length() > 0:
 		# calculate acceleration and add to velocity
 		accel = accel_dir.normalized() * player_accel * delta
-		cur_velocity += accel
-		# prevent velocity from exceeding max
-		cur_velocity = cur_velocity.limit_length(max_velocity)		
 	else:
 		# slow down if there is no accel input
 		var error = Vector2.ZERO - cur_velocity
 		accel = error * player_auto_decel_scale * delta
+	cur_velocity += accel
+	# prevent velocity from exceeding max
+	cur_velocity = cur_velocity.limit_length(max_velocity)
 	
 	if rot_accel_dir != RotDir.NONE:
 		# calculate rotational acceleration and add to velocity
