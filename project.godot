@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "CollisionPolygon2D",
-"class": "CollisionShapePoints",
-"language": "GDScript",
-"path": "res://CollisionShapePoints.gd"
-}, {
 "base": "",
 "class": "GitAPI",
 "language": "NativeScript",
@@ -24,21 +19,14 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Player.gd"
 }, {
-"base": "Polygon2D",
-"class": "ShapePoints",
-"language": "GDScript",
-"path": "res://ShapePoints.gd"
-}, {
 "base": "Node",
 "class": "Stopwatch",
 "language": "GDScript",
 "path": "res://Stopwatch.gd"
 } ]
 _global_script_class_icons={
-"CollisionShapePoints": "",
 "GitAPI": "",
 "Player": "",
-"ShapePoints": "",
 "Stopwatch": ""
 }
 
