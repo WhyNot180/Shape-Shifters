@@ -19,15 +19,23 @@ var missing_sides = 1
 
 var gravity = 500
 
-var gravity_area
+var gravity_areas = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	gravity_area = get_node("Gravity")
-
+	gravity_areas.append(get_node("Gravity"))
+	gravity_areas.append(rpc())
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+func _process(delta):
+	if get_tree().is_network_server():
+		rpc_unreliable("update_position", ball_position, gravity_positions)
+
+puppetsync func update_position(ball_position, gravity_positions):
+	b.set_position(ball_position)
+	for i in gravity_position:
+		gravity_areas[i].set_position(gravity_position[i])
+
 func timer_timeout():
 	seconds_elapsed += 1
 	if(seconds_elapsed % difficulty == 0):
@@ -57,4 +65,4 @@ func _unhandled_input(event):
 		#if event.button_index == BUTTON_RIGHT:
 			
 	if event is InputEventMouseMotion:
-		gravity_area.set_position(event.position)
+		gravity_areas[0].set_position(event.position)
