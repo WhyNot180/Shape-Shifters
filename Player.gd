@@ -17,7 +17,10 @@ export (float) var player_auto_decel_scale = 4.0 # 1/sqrt(seconds)
 # find out what unit this is
 export (float) var player_rot_auto_decel_scale = 1.0 # unit here
 
-puppet var puppet_position = Vector2(0,0) setget puppet_position_set
+puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
+puppet var puppet_velocity = Vector2(0, 0)
+puppet var puppet_rotation = 0
+puppet var puppet_rot_velocity = 0.0
 
 var cur_sides: int = 3 # start at triangle
 var cur_velocity := Vector2()
@@ -38,48 +41,53 @@ func _ready():
 
 func _physics_process(delta):
 	# add xbox controls?
-	var accel_dir = Vector2()
-	if Input.is_action_pressed("move_up"):
-		accel_dir.y -= 1 # y starts from top of screen
-	if Input.is_action_pressed("move_down"):
-		accel_dir.y += 1
-	if Input.is_action_pressed("move_left"):
-		accel_dir.x -= 1
-	if Input.is_action_pressed("move_right"):
-		accel_dir.x += 1
-	var rot_accel_dir = RotDir.NONE
-	if Input.is_action_pressed("rotate_left"):
-		rot_accel_dir = RotDir.CCW_LEFT
-	if Input.is_action_pressed("rotate_right"):
-		rot_accel_dir = RotDir.CW_RIGHT
-	
-	var accel: Vector2
-	if accel_dir.length() > 0:
-		# calculate acceleration and add to velocity
-		accel = accel_dir.normalized() * player_accel * delta
+	if is_network_master():
+		var accel_dir = Vector2()
+		if Input.is_action_pressed("move_up"):
+			accel_dir.y -= 1 # y starts from top of screen
+		if Input.is_action_pressed("move_down"):
+			accel_dir.y += 1
+		if Input.is_action_pressed("move_left"):
+			accel_dir.x -= 1
+		if Input.is_action_pressed("move_right"):
+			accel_dir.x += 1
+		var rot_accel_dir = RotDir.NONE
+		if Input.is_action_pressed("rotate_left"):
+			rot_accel_dir = RotDir.CCW_LEFT
+		if Input.is_action_pressed("rotate_right"):
+			rot_accel_dir = RotDir.CW_RIGHT
+		
+		var accel: Vector2
+		if accel_dir.length() > 0:
+			# calculate acceleration and add to velocity
+			accel = accel_dir.normalized() * player_accel * delta
+		else:
+			# slow down if there is no accel input
+			var error = Vector2.ZERO - cur_velocity
+			accel = error * player_auto_decel_scale * delta
+		cur_velocity += accel
+		# prevent velocity from exceeding max
+		cur_velocity = cur_velocity.limit_length(max_velocity)
+		
+		if rot_accel_dir != RotDir.NONE:
+			# calculate rotational acceleration and add to velocity
+			rot_velocity += rot_accel_dir * player_rot_accel * delta
+			# prevent rotational velocity from exceeding max
+			rot_velocity = min(rot_velocity, max_rot_velocity)
+		else:
+			# slow down if there is no accel input
+			var error = 0.0 - rot_velocity
+			rot_velocity += error * player_rot_auto_decel_scale * delta
+			
+		# apply velocity and rotation
+	# warning-ignore:return_value_discarded
+		move_and_slide(cur_velocity) # do not multiply delta by velocity
+		rotate(rot_velocity * delta) # do multiply delta by velocity
 	else:
-		# slow down if there is no accel input
-		var error = Vector2.ZERO - cur_velocity
-		accel = error * player_auto_decel_scale * delta
-	cur_velocity += accel
-	# prevent velocity from exceeding max
-	cur_velocity = cur_velocity.limit_length(max_velocity)
-	
-	if rot_accel_dir != RotDir.NONE:
-		# calculate rotational acceleration and add to velocity
-		rot_velocity += rot_accel_dir * player_rot_accel * delta
-		# prevent rotational velocity from exceeding max
-		rot_velocity = min(rot_velocity, max_rot_velocity)
-	else:
-		# slow down if there is no accel input
-		var error = 0.0 - rot_velocity
-		rot_velocity += error * player_rot_auto_decel_scale * delta
-	
-	# apply velocity and rotation
-# warning-ignore:return_value_discarded
-	move_and_slide(cur_velocity) # do not multiply delta by velocity
-	rotate(rot_velocity * delta) # do multiply delta by velocity
-
+		rotation_degrees = lerp(rotation_degrees, puppet_rotation, delta * 8)
+		if not tween.is_active():
+			move_and_slide(puppet_velocity)
+			rotate(puppet_rot_velocity * delta)
 
 func on_difficulty_change():
 	# will need adjustment
@@ -138,3 +146,6 @@ func puppet_position_set(new_value):
 func _on_network_tick_rate_timeout():
 	if is_network_master():
 		rset_unreliable("puppet_position", global_position)
+		rset_unreliable("puppet_velocity", cur_velocity)
+		rset_unreliable("puppet_rotation", rotation_degrees)
+		rset_unreliable("puppet_rot_velocity", rot_velocity)

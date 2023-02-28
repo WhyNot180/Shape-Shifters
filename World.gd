@@ -46,7 +46,7 @@ func timer_timeout():
 
 
 # temporary
-func _process(delta):
+func _physics_process(delta):
 	gravity_area.set_position(get_node ("Player").position)
 	# should make gravity a child of Player (put in the player scene)
 
