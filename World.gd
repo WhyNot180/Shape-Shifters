@@ -1,10 +1,12 @@
 extends Node2D
 
+signal MORE_SIDES
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
 var Ball = load("res://Ball.tscn")
+#var Player = load("res://Player.tscn")
 
 var difficulty = 15
 
@@ -52,17 +54,20 @@ func timer_timeout():
 			_:
 				print("entered default")
 		if(difficulty != 1): difficulty -= 1
-	
-	
 
+# temporary
+func _process(delta):
+	gravity_area.set_position(get_node("Player").position)
+	# should make gravity a child of Player (put in the player scene)
 
 func _unhandled_input(event):
+	# temporary
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == BUTTON_LEFT:
 			var b = Ball.instance()
 			add_child(b)
 			b.set_position(event.position)
-		#if event.button_index == BUTTON_RIGHT:
-			
-	if event is InputEventMouseMotion:
-		gravity_areas[0].set_position(event.position)
+			emit_signal("MORE_SIDES")
+
+func _on_Gravity_change_grav(strength):
+	pass # Replace with function body.
