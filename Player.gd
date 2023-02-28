@@ -3,6 +3,7 @@ class_name Player
 
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
+onready var tween
 
 var sides = 3 # start at triangle
 # editable in 
@@ -14,6 +15,8 @@ export var player_accel: float = 1000 # pixels/second^2
 # 1/sqrt(seconds) to decelerate
 export var player_auto_decel_scale: float = 4 # 1/sqrt(seconds)
 
+puppet var puppet_position = Vector2(0,0) setget puppet_position_set
+
 var cur_velocity := Vector2()
 var accel_dir := Vector2()
 
@@ -22,6 +25,7 @@ func _init():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	tween = get_node("Tween")
 	set("collision/safe_margin", collision_safe_margin)
 	change_shape(sides)
 	print_points()
@@ -36,35 +40,36 @@ func _process(delta):
 #		velocity.x -= 1
 #	if Input.is_action_pressed("move_right"):
 #		velocity.x += 1
-	var accel_dir = Vector2()
-	if Input.is_action_pressed("move_up"):
-		accel_dir.y -= 1 # y starts from top of screen
-	if Input.is_action_pressed("move_down"):
-		accel_dir.y += 1
-	if Input.is_action_pressed("move_left"):
-		accel_dir.x -= 1
-	if Input.is_action_pressed("move_right"):
-		accel_dir.x += 1
-	# implement xbox controller version?
-	
-	var accel: Vector2
-	# prevent diagonal accel from exceeding accel limit
-	if accel_dir.length() > 0:
-		accel = accel_dir.normalized() * player_accel * delta
-	else: # if there is no accel input, slow down
-		# want to get to zero
-		var error = Vector2.ZERO - cur_velocity
-		accel = error * player_auto_decel_scale * delta
-	
-	cur_velocity += accel
-	
-	cur_velocity = cur_velocity.limit_length(max_velocity)
-	
-	# do not multiply velocity by delta
-	move_and_slide(cur_velocity)
-	
-	# need to provide with velocity
-	# should accelerate up until a point
+	#if is_network_master():
+		var accel_dir = Vector2()
+		if Input.is_action_pressed("move_up"):
+			accel_dir.y -= 1 # y starts from top of screen
+		if Input.is_action_pressed("move_down"):
+			accel_dir.y += 1
+		if Input.is_action_pressed("move_left"):
+			accel_dir.x -= 1
+		if Input.is_action_pressed("move_right"):
+			accel_dir.x += 1
+		# implement xbox controller version?
+		
+		var accel: Vector2
+		# prevent diagonal accel from exceeding accel limit
+		if accel_dir.length() > 0:
+			accel = accel_dir.normalized() * player_accel * delta
+		else: # if there is no accel input, slow down
+			# want to get to zero
+			var error = Vector2.ZERO - cur_velocity
+			accel = error * player_auto_decel_scale * delta
+		
+		cur_velocity += accel
+		
+		cur_velocity = cur_velocity.limit_length(max_velocity)
+		
+		# do not multiply velocity by delta
+		move_and_slide(cur_velocity)
+		
+		# need to provide with velocity
+		# should accelerate up until a point
 
 func _physics_process(delta):
 	pass
@@ -115,3 +120,13 @@ func print_points() -> void:
 
 func get_pos():
 	return position
+
+func puppet_position_set(new_value):
+	puppet_position = new_value
+	
+	tween.interpolate_property(self, "global_position", global_position, puppet_position, 0.1)
+	tween.start()
+
+func _on_network_tick_rate_timeout():
+	if is_network_master():
+		rset_unreliable("puppet_position", global_position)
