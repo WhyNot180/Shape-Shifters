@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://LineEdit.gd" type="Script" id=1]
+
+[node name="2 or 3" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 86.0
+margin_top = -6.0
+margin_right = 381.0
+margin_bottom = 88.0
+
+[node name="2 player" type="Button" parent="VBoxContainer"]
+margin_right = 295.0
+margin_bottom = 20.0
+text = "2 player"
+
+[node name="3 player" type="Button" parent="VBoxContainer"]
+margin_top = 24.0
+margin_right = 295.0
+margin_bottom = 44.0
+text = "3 player"
+
+[node name="Host" type="TextEdit" parent="."]
+margin_left = 164.0
+margin_top = 345.0
+margin_right = 319.0
+margin_bottom = 383.0
+text = "  				HOST"
+
+[node name="Join" type="TextEdit" parent="."]
+margin_left = 637.0
+margin_top = 336.0
+margin_right = 840.0
+margin_bottom = 389.0
+text = "					JOIN"
+
+[node name="LineEdit" type="LineEdit" parent="."]
+margin_left = 595.0
+margin_top = 471.0
+margin_right = 910.0
+margin_bottom = 573.0
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "lan connection"
+}
