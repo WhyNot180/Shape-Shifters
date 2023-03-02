@@ -1,0 +1,57 @@
+[gd_scene format=2]
+
+[node name="Controls" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_top = -4.0
+margin_right = 3.0
+margin_bottom = -4.0
+
+[node name="move up" type="Label" parent="."]
+margin_left = 169.0
+margin_top = 38.0
+margin_right = 281.0
+margin_bottom = 109.0
+text = "MOVE UP
+DEFAULT W"
+
+[node name="move down" type="Label" parent="."]
+margin_left = 169.0
+margin_top = 109.0
+margin_right = 281.0
+margin_bottom = 180.0
+text = "MOVE DOWN
+DEFAULT S"
+
+[node name="move left" type="Label" parent="."]
+margin_left = 172.0
+margin_top = 194.0
+margin_right = 284.0
+margin_bottom = 265.0
+text = "MOVE LEFT
+DEFAULT A"
+
+[node name="move right" type="Label" parent="."]
+margin_left = 169.0
+margin_top = 266.0
+margin_right = 281.0
+margin_bottom = 337.0
+text = "MOVE RIGHT
+DEFAULT D"
+
+[node name="rotate right" type="Label" parent="."]
+margin_left = 170.0
+margin_top = 343.0
+margin_right = 282.0
+margin_bottom = 414.0
+text = "ROTATE RIGHT
+DEFAULT Q"
+
+[node name="rotate left" type="Label" parent="."]
+margin_left = 172.0
+margin_top = 413.0
+margin_right = 284.0
+margin_bottom = 484.0
+text = "ROTATE LEFT
+DEFAULT E"

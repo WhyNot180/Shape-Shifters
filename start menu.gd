@@ -24,12 +24,8 @@ func _on_Multiplayer_pressed():
 func _on_how_to_pressed():
 	get_tree().change_scene("res://howtoplay.tscn")
 
-#func _on_controls_pressed():
-	#get_tree().change_scene.add_child(options)
-
 func _on_Quit_pressed():
 	get_tree().quit()
 
-
 func _on_controls_pressed():
-	pass # Replace with function body.
+	get_tree().change_scene("res://Controls screen.tscn")

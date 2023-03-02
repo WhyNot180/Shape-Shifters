@@ -50,3 +50,6 @@ text = "Quit"
 script = ExtResource( 4 )
 
 [connection signal="pressed" from="VBoxContainer/Play" to="VBoxContainer" method="_on_Multiplayer_pressed"]
+[connection signal="pressed" from="VBoxContainer/How to play" to="VBoxContainer" method="_on_how_to_pressed"]
+[connection signal="pressed" from="VBoxContainer/controls" to="VBoxContainer" method="_on_controls_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit" to="VBoxContainer" method="_on_Quit_pressed"]
