@@ -1,6 +1,8 @@
 extends KinematicBody2D
 class_name Player
 
+var m_player_id: int
+
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
 
@@ -23,14 +25,16 @@ var rot_velocity := 0.0 # radians/s clockwise-positive
 # clockwise-positive
 enum RotDir {CCW_LEFT = -1, NONE = 0, CW_RIGHT = 1}
 
-func _init():
-	pass
+
+func _init(player_id: int = 0):
+	m_player_id = player_id
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set("collision/safe_margin", collision_safe_margin)
 	change_shape(cur_sides) # create triangle
 	print_points()
+
 
 func _physics_process(delta):
 	# add xbox controls?
@@ -77,7 +81,7 @@ func _physics_process(delta):
 	rotate(rot_velocity * delta) # do multiply delta by velocity
 
 
-func on_difficulty_change():
+func _on_difficulty_change():
 	# will need adjustment
 	cur_sides += 1
 	radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly

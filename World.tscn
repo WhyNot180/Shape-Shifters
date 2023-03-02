@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://World.gd" type="Script" id=1]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Pause.gd" type="Script" id=4]
 [ext_resource path="res://Stopwatch.gd" type="Script" id=5]
 
@@ -74,7 +73,3 @@ position = Vector2( 403, -532 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
 position = Vector2( -1748, 533 )
 shape = SubResource( 6 )
-
-[node name="Player" parent="." instance=ExtResource( 3 )]
-
-[connection signal="MORE_SIDES" from="." to="Player" method="on_difficulty_change"]
