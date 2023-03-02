@@ -10,7 +10,6 @@ bounce = 1.0
 radius = 14.83
 
 [node name="Ball" type="RigidBody2D"]
-position = Vector2( 512, 300 )
 physics_material_override = SubResource( 2 )
 continuous_cd = 1
 linear_damp = 1.0

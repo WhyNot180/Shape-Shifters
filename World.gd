@@ -2,8 +2,10 @@ extends Node2D
 
 signal MORE_SIDES # should be sent from Stopwatch
 
+
 var Ball = load("res://Ball.tscn")
 #var Player = load("res://Player.tscn")
+
 
 # should all be handled from stopwatch
 var difficulty = 15
@@ -13,39 +15,30 @@ var last_recorded_time = 0
 var amount_sides = 3
 var missing_sides = 1
 
-var gravity = 500
-var gravity_area # should be part of player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	gravity_area = get_node("Gravity")
+	pass
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-func timer_timeout():
-	seconds_elapsed += 1
-	if(seconds_elapsed % difficulty == 0):
-		difficulty_modulo = seconds_elapsed % 3
-		match difficulty_modulo:
-			0:
-				amount_sides += 1
-			1:
-				gravity += 50
-				gravity_area.emit_signal("change_grav", gravity)
-			2:
-				if(missing_sides < amount_sides - 1):
-					missing_sides += 1
-			_:
-				print("entered default")
-		if(difficulty != 1): difficulty -= 1
-
-
-# temporary
-func _process(delta):
-	gravity_area.set_position(get_node ("Player").position)
-	# should make gravity a child of Player (put in the player scene)
-
+# move difficulty changes to Stopwatch
+#func timer_timeout():
+#	seconds_elapsed += 1
+#	if(seconds_elapsed % difficulty == 0):
+#		difficulty_modulo = seconds_elapsed % 3
+#		match difficulty_modulo:
+#			0:
+#				amount_sides += 1
+#			1:
+#				gravity += 50
+#				gravity_area.emit_signal("change_grav", gravity)
+#			2:
+#				if(missing_sides < amount_sides - 1):
+#					missing_sides += 1
+#			_:
+#				print("entered default")
+#		if(difficulty != 1): difficulty -= 1
+#	pass
 
 func _unhandled_input(event):
 	# temporary
@@ -53,9 +46,5 @@ func _unhandled_input(event):
 		if event.button_index == BUTTON_LEFT:
 			var b = Ball.instance()
 			add_child(b)
-			b.set_position(event.position)
+			b.set_position(get_node("BallStartPos").position)
 			emit_signal("MORE_SIDES")
-
-
-func _on_Gravity_change_grav(strength):
-	pass # Replace with function body.
