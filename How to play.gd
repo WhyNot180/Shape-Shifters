@@ -1,4 +1,4 @@
-extends LineEdit
+extends Button
 
 
 # Declare member variables here. Examples:
@@ -14,7 +14,5 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-
-
-func _on_player_count_text_entered(new_text):
-	pass # Replace with function body.
+func _on_how_to_pressed():
+	get_tree().change_scene("res://howtoplay.tscn")
