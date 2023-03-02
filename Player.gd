@@ -6,7 +6,7 @@ onready var shape = get_node("Polygon2D")
 
 export (int) var radius = 25 # pixels
 # making this stupidly large still doesn't do all too much
-export (float) var collision_safe_margin = 25 # pixels
+export (float) var collision_safe_margin = 25.0 # pixels
 export (float) var max_velocity = 400.0 # pixels/second
 export (float) var player_accel = 1000.0 # pixels/second^2
 export (float) var max_rot_velocity = 2.5 * (2 * PI) # radians/s clockwise-positive 
@@ -74,7 +74,6 @@ func _physics_process(delta):
 	# apply velocity and rotation
 # warning-ignore:return_value_discarded
 	move_and_slide(cur_velocity) # do not multiply delta by velocity
-	print(rot_velocity)
 	rotate(rot_velocity * delta) # do multiply delta by velocity
 
 
