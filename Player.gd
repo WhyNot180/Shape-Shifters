@@ -2,6 +2,8 @@ extends KinematicBody2D
 class_name Player
 
 var m_player_id: int
+var lines: Array
+var collision_lines: Array
 
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
@@ -95,10 +97,24 @@ func _on_difficulty_change():
 #	pass
 
 
+func apply_points(sides: int, point_sets: Array):
+	assert(sides == point_sets.size())
+	# lines array (put new item in array (erase previous? or modify them?)
+	# collision_lines array
+	# apply to lines
+	
+	
+	# apply to collision lines
+	
+	# do stuff here
+
+
 func change_shape(sides: int) -> void:
-	var points = generate_points(sides)
-	shape.polygon = points
-	collisionShape.set_polygon(points)
+	var point_sets = generate_line_points(sides)
+	apply_points(sides, point_sets) # works
+	print_line_points(point_sets) # works
+	#shape.polygon = points
+	#collisionShape.set_polygon(points)
 
 
 func find_point(sides, pointID) -> Vector2:
@@ -107,12 +123,36 @@ func find_point(sides, pointID) -> Vector2:
 	return Vector2(x, y)
 
 
+func generate_line_points(sides: int) -> Array:
+	var point_sets := Array()
+	var point_id = 0
+	for _set_id in range(sides):
+		var set := PoolVector2Array()
+		set.append(find_point(sides, point_id)) # first point
+		point_id += 1
+		set.append(find_point(sides, point_id)) # second point
+		# do not need to increment since point is shared with next line
+		point_sets.append(set)
+	return point_sets
+
+
 func generate_points(sides: int) -> PoolVector2Array:
 	var points := PoolVector2Array()
 	for point in range(sides):
 		var coordinates := find_point(sides, point)
 		points.append(coordinates)
 	return points
+
+
+func print_line_points(point_sets: Array) -> void:
+	# point_sets is an Array<PoolVector2Array>[sides]
+	# PoolVector2Array is an Array<Vector2>[2]
+	# Total: Array<Array<Vector2>[2]>[sides]
+	print("Line Points:")
+	for point_set in point_sets:
+		print("Point Set:")
+		for point in point_set: # put s in stead of none
+			print("X: %.0f, Y: %.0f" % [point.x, point.y])
 
 
 func print_points() -> void:

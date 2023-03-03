@@ -34,6 +34,7 @@ func _on_player_join():
 	players.append(Player.instance(current_player_id))
 	add_child(players[current_player_id])
 	# connect player signals
+# warning-ignore:return_value_discarded
 	connect("MORE_SIDES", players[current_player_id], "_on_difficulty_change")
 	current_player_id += 1
 
