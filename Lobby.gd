@@ -1,34 +1,66 @@
-extends Node
+extends Control
 
-const DEFAULT_PORT = 28960
-const MAX_CLIENTS = 3
+var player = load("res://Player.tscn")
+var ball = load("res://Ball.tscn")
+var client_ball = load("res://Client Ball.tscn")
 
-var server = null
-var client = null
-
-var ip_address = ""
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	for ip in IP.get_local_addresses():
-		if ip.begins_with("192.168."):
-			ip_address = ip
-	
+	get_tree().connect("network_peer_connected", self, "_player_connected")
+	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	get_tree().connect("connected_to_server", self, "_connected_to_server")
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
+	
 
-func create_server():
-	server = NetworkedMultiplayerENet.new()
-	server.create_server(DEFAULT_PORT, MAX_CLIENTS)
-	get_tree().set_network_peer(server)
+func _player_connected(id):
+	if id != get_tree().get_network_unique_id():
+		print("Player " + str(id) + " has connected")
+	
+		instance_player(id)
 
-func join_server():
-	client = NetworkedMultiplayerENet.new()
-	client.create_client(ip_address, DEFAULT_PORT)
-	get_tree().set_network_peer(client)
+func _player_disconnected(id):
+	print("Player " + str(id) + " has disconnected")
+	
+	if Players.has_node(str(id)):
+		Players.get_node(str(id)).queue_free()
 
 func _connected_to_server():
-	print("connected successfully")
+	yield(get_tree().create_timer(0.1), "timeout")
+	instance_player(get_tree().get_network_unique_id())
+	instance_client_ball()
 
 func _server_disconnected():
-	print("disconnected from the server")
+	Players.queue_free()
+	get_tree().change_scene("res://Server Menu.tscn")
+
+func _on_2_player_pressed():
+	Network.create_server(2)
+	print(str(Network.ip_address))
+	get_tree().change_scene("res://World.tscn")
+	instance_player(get_tree().get_network_unique_id())
+	instance_server_ball(1)
+
+func _on_3_player_pressed():
+	Network.create_server(3)
+	print(str(Network.ip_address))
+	get_tree().change_scene("res://World.tscn")
+	instance_player(get_tree().get_network_unique_id())
+	instance_server_ball(1)
+
+func _on_Join(ip: String):
+	if ip != "" and ip.is_valid_ip_address():
+		Network.ip_address = ip
+		Network.join_server()
+		get_tree().change_scene("res://World.tscn")
+
+func instance_player(id):
+	var player_instance = Global.instance_node_at_location(player, Players, Vector2(rand_range(10, 990), rand_range(10, 990)))
+	player_instance.name = str(id)
+	player_instance.set_network_master(id)
+
+func instance_server_ball(id):
+	var ball_instance = Global.instance_node_at_location(ball, Players, Vector2(rand_range(10, 990), rand_range(10, 990)))
+	ball_instance.name = "ball"
+
+func instance_client_ball():
+	var ball_instance = Global.instance_node(client_ball, Players)
+	ball_instance.name = "ball"

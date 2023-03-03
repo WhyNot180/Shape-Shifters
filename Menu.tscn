@@ -48,3 +48,7 @@ margin_top = 96.0
 margin_right = 291.0
 margin_bottom = 116.0
 text = "Quit"
+
+[connection signal="pressed" from="VBoxContainer/Multiplayer" to="VBoxContainer" method="_on_Multiplayer_pressed"]
+[connection signal="pressed" from="VBoxContainer/How to play" to="VBoxContainer" method="_on_how_to_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit" to="VBoxContainer" method="_on_Quit_pressed"]

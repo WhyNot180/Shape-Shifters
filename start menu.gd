@@ -15,19 +15,19 @@ func _ready():
 #	pass
 
 
-func _on_signleplayer_pressed():
-	get_tree().change_scene() 
+#func _on_singleplayer_pressed():
+	#get_tree().change_scene() 
 
 func _on_Multiplayer_pressed():
-	get_tree().change_scene("res://PlayerShape.tscn") 
+	get_tree().change_scene("res://Server Menu.tscn") 
 
 
 func _on_how_to_pressed():
 	get_tree().change_scene("res://howtoplay.tscn")
 
 
-func _on_controls_pressed():
-	get_tree().change_scene.add_child(options)
+#func _on_controls_pressed():
+	#get_tree().change_scene.add_child(options)
 
 func _on_Quit_pressed():
 	get_tree().quit()

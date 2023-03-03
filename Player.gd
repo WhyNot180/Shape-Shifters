@@ -3,6 +3,7 @@ class_name Player
 
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
+onready var gravity_area = get_node("Gravity")
 onready var tween
 
 export (int) var radius = 25 # pixels
@@ -17,9 +18,9 @@ export (float) var player_auto_decel_scale = 4.0 # 1/sqrt(seconds)
 # find out what unit this is
 export (float) var player_rot_auto_decel_scale = 1.0 # unit here
 
-puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
-puppet var puppet_velocity = Vector2(0, 0)
-puppet var puppet_rotation = 0
+puppet var puppet_player_position = Vector2(0, 0) setget puppet_player_position_set
+puppet var puppet_player_velocity = Vector2(0, 0)
+puppet var puppet_player_rotation = 0
 puppet var puppet_rot_velocity = 0.0
 
 var cur_sides: int = 3 # start at triangle
@@ -81,13 +82,13 @@ func _physics_process(delta):
 			
 		# apply velocity and rotation
 	# warning-ignore:return_value_discarded
+		
 		move_and_slide(cur_velocity) # do not multiply delta by velocity
 		rotate(rot_velocity * delta) # do multiply delta by velocity
 	else:
-		rotation_degrees = lerp(rotation_degrees, puppet_rotation, delta * 8)
+		rotation = lerp_angle(rotation, puppet_player_rotation, delta * 8)
 		if not tween.is_active():
-			move_and_slide(puppet_velocity)
-			rotate(puppet_rot_velocity * delta)
+			move_and_slide(puppet_player_velocity)
 
 func on_difficulty_change():
 	# will need adjustment
@@ -137,15 +138,14 @@ func print_points() -> void:
 func get_pos():
 	return position
 
-func puppet_position_set(new_value):
-	puppet_position = new_value
+func puppet_player_position_set(new_value):
+	puppet_player_position = new_value
 	
-	tween.interpolate_property(self, "global_position", global_position, puppet_position, 0.1)
+	tween.interpolate_property(self, "global_position", global_position, puppet_player_position, 0.1)
 	tween.start()
 
 func _on_network_tick_rate_timeout():
 	if is_network_master():
-		rset_unreliable("puppet_position", global_position)
-		rset_unreliable("puppet_velocity", cur_velocity)
-		rset_unreliable("puppet_rotation", rotation_degrees)
-		rset_unreliable("puppet_rot_velocity", rot_velocity)
+		rset_unreliable("puppet_player_position", global_position)
+		rset_unreliable("puppet_player_velocity", cur_velocity)
+		rset_unreliable("puppet_player_rotation", rotation)

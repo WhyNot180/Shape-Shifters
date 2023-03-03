@@ -3,7 +3,6 @@ extends Node2D
 signal MORE_SIDES # should be sent from Stopwatch
 
 var Ball = load("res://Ball.tscn")
-#var Player = load("res://Player.tscn")
 
 # should all be handled from stopwatch
 var difficulty = 15
@@ -14,13 +13,12 @@ var amount_sides = 3
 var missing_sides = 1
 
 var gravity = 500
-var gravity_area # should be part of player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	pass
 	#gravity_areas.append(get_node("Gravity"))
 	#gravity_areas.append(rpc())
-	gravity_area = get_node("Gravity")
 
 #puppetsync func update_position(ball_position, gravity_positions):
 	#b.set_position(ball_position)
@@ -36,7 +34,7 @@ func timer_timeout():
 				amount_sides += 1
 			1:
 				gravity += 50
-				gravity_area.emit_signal("change_grav", gravity)
+				Players.emit_signal("change_grav", gravity)
 			2:
 				if(missing_sides < amount_sides - 1):
 					missing_sides += 1
@@ -47,7 +45,7 @@ func timer_timeout():
 
 # temporary
 func _physics_process(delta):
-	gravity_area.set_position(get_node ("Player").position)
+	pass
 	# should make gravity a child of Player (put in the player scene)
 
 
@@ -59,7 +57,3 @@ func _unhandled_input(event):
 			add_child(b)
 			b.set_position(event.position)
 			emit_signal("MORE_SIDES")
-
-
-func _on_Gravity_change_grav(strength):
-	pass # Replace with function body.

@@ -34,3 +34,5 @@ this you must rotate your shape; as you get further into the game you shape will
 more sides and more sides will disapper at once. and in multiplayer you will need to try 
 to knock the ball into the other players by moving your shape for all of your controls check 
 the controls screen in multiplayer the last one standing wins while ine singleplayer it is endless"
+
+[connection signal="pressed" from="VBoxContainer/back" to="VBoxContainer/back" method="_on_Back_pressed"]

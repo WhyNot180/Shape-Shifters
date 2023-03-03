@@ -1,8 +1,4 @@
 extends RigidBody2D
 
-func _on_VisibilityNotifier2D_viewport_exited(viewport):
-	gravity_scale = 10.0
-
-
-func _on_VisibilityNotifier2D_viewport_entered(viewport):
-	gravity_scale = 1.0
+func _on_network_tick_rate_timeout():
+	Balls.set_ball_vars(global_position, linear_velocity)
