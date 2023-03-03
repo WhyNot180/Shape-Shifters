@@ -1,6 +1,8 @@
 extends KinematicBody2D
 class_name Player
 
+var m_player_id: int
+
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
 onready var gravity_area = get_node("Gravity")
@@ -8,10 +10,10 @@ onready var tween
 
 export (int) var radius = 25 # pixels
 # making this stupidly large still doesn't do all too much
-export (float) var collision_safe_margin: float = radius as float # pixels
+export (float) var collision_safe_margin = 25.0 # pixels
 export (float) var max_velocity = 400.0 # pixels/second
 export (float) var player_accel = 1000.0 # pixels/second^2
-export (float) var max_rot_velocity = 10 * (2 * PI) # radians/s clockwise-positive 
+export (float) var max_rot_velocity = 2.5 * (2 * PI) # radians/s clockwise-positive 
 export (float) var player_rot_accel = 2 * PI # radians/s^2 clockwise-positive
 # 1/sqrt(seconds) to decelerate
 export (float) var player_auto_decel_scale = 4.0 # 1/sqrt(seconds)
@@ -30,8 +32,9 @@ var rot_velocity := 0.0 # radians/s clockwise-positive
 # clockwise-positive
 enum RotDir {CCW_LEFT = -1, NONE = 0, CW_RIGHT = 1}
 
-func _init():
-	pass
+
+func _init(player_id: int = 0):
+	m_player_id = player_id
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -39,6 +42,7 @@ func _ready():
 	set("collision/safe_margin", collision_safe_margin)
 	change_shape(cur_sides) # create triangle
 	print_points()
+
 
 func _physics_process(delta):
 	# add xbox controls?
@@ -74,15 +78,14 @@ func _physics_process(delta):
 			# calculate rotational acceleration and add to velocity
 			rot_velocity += rot_accel_dir * player_rot_accel * delta
 			# prevent rotational velocity from exceeding max
-			rot_velocity = min(rot_velocity, max_rot_velocity)
+			rot_velocity = clamp(rot_velocity, -max_rot_velocity, max_rot_velocity)
 		else:
 			# slow down if there is no accel input
 			var error = 0.0 - rot_velocity
 			rot_velocity += error * player_rot_auto_decel_scale * delta
-			
-		# apply velocity and rotation
-	# warning-ignore:return_value_discarded
 		
+		# apply velocity and rotation
+# warning-ignore:return_value_discarded
 		move_and_slide(cur_velocity) # do not multiply delta by velocity
 		rotate(rot_velocity * delta) # do multiply delta by velocity
 	else:
@@ -90,7 +93,8 @@ func _physics_process(delta):
 		if not tween.is_active():
 			move_and_slide(puppet_player_velocity)
 
-func on_difficulty_change():
+
+func _on_difficulty_change():
 	# will need adjustment
 	cur_sides += 1
 	radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
