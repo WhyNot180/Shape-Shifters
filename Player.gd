@@ -3,6 +3,8 @@ class_name Player
 
 var m_player_id: int
 
+signal MORE_SIDES
+
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
 onready var gravity_area = get_node("GravityArea")
@@ -94,19 +96,13 @@ func _physics_process(delta):
 			move_and_slide(puppet_player_velocity)
 
 
-func _on_difficulty_change():
-	# will need adjustment
-	cur_sides += 1
-	radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
-	player_accel *= 1.1 # not necessary if the shape doesn't change size
-	max_velocity *= 1.1 # see above
-	change_shape(cur_sides)
+func _on_difficulty_change(sides):
+	cur_sides = sides
+	print("changing shape")
+	change_shape(sides)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
+func get_sides() -> int:
+	return cur_sides
 
 func change_shape(sides: int) -> void:
 	var points = generate_points(sides)

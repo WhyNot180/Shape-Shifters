@@ -15,6 +15,9 @@ func _ready():
 func _change_grav(strength):
 	new_grav = strength
 	print("increasing gravity")
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
+func get_grav() -> float:
+	return gravity
+
 func _physics_process(delta):
 	gravity = new_grav

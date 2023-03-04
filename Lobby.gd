@@ -14,7 +14,6 @@ func _ready():
 func _player_connected(id):
 	if id != get_tree().get_network_unique_id():
 		print("Player " + str(id) + " has connected")
-	
 		instance_player(id)
 
 func _player_disconnected(id):
