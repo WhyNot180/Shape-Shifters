@@ -1,6 +1,7 @@
 extends Node2D
 
 signal MORE_SIDES # should be sent from Stopwatch
+signal CHANGE_HIDDEN_SIDES
 
 
 var Ball = preload("res://Ball.tscn")
@@ -14,7 +15,7 @@ var difficulty_modulo
 var seconds_elapsed = 0
 var last_recorded_time = 0
 var amount_sides = 3
-var missing_sides = 1
+var missing_sides = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -36,6 +37,8 @@ func _on_player_join():
 	# connect player signals
 # warning-ignore:return_value_discarded
 	connect("MORE_SIDES", players[current_player_id], "_on_difficulty_change")
+# warning-ignore:return_value_discarded	
+	connect("CHANGE_HIDDEN_SIDES", players[current_player_id], "_change_hidden_sides")
 	current_player_id += 1
 
 
@@ -63,11 +66,16 @@ func _on_player_leave(player_id):
 #		if(difficulty != 1): difficulty -= 1
 #	pass
 
+
 func _unhandled_input(event):
 	# temporary
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == BUTTON_LEFT:
 			var b = Ball.instance()
 			add_child(b)
+			b.add_to_group("Balls")
 			b.set_position(get_node("BallStartPos").position)
 			emit_signal("MORE_SIDES")
+		if event.button_index == BUTTON_RIGHT:
+			missing_sides += 1
+			emit_signal("CHANGE_HIDDEN_SIDES", missing_sides)

@@ -1,14 +1,19 @@
 extends KinematicBody2D
 class_name Player
 
+
+# should we keep the other point generating functions to generate a CollisionShape2D for the scoring system?
+# yes
+# also add the CollisionShape2d to the player, it will silence the warning too
+
+
 var m_player_id: int
-var lines: Array
-var collision_lines: Array
+var line_segments: Array
+var random = RandomNumberGenerator.new()
 
-onready var collisionShape = get_node("CollisionPolygon2D")
-onready var shape = get_node("Polygon2D")
-
-export (int) var radius = 25 # pixels
+export (Color) var color = Color.lightblue
+export (int) var m_radius = 25 # pixels
+export (int) var outline_width = 10 # pixels
 # making this stupidly large still doesn't do all too much
 export (float) var collision_safe_margin = 25.0 # pixels
 export (float) var max_velocity = 400.0 # pixels/second
@@ -20,12 +25,46 @@ export (float) var player_auto_decel_scale = 4.0 # 1/sqrt(seconds)
 # find out what unit this is
 export (float) var player_rot_auto_decel_scale = 1.0 # unit here
 
+# this becomes a bad idea once _change_sides() is called with a different number
 var cur_sides: int = 3 # start at triangle
 var cur_velocity := Vector2()
 var rot_velocity := 0.0 # radians/s clockwise-positive
-
 # clockwise-positive
 enum RotDir {CCW_LEFT = -1, NONE = 0, CW_RIGHT = 1}
+
+
+class LineSegment:
+	var line_2d: Line2D
+	var collision_shape_2d: CollisionShape2D
+	
+	
+	func _init():
+		# setup collision_shape_2d/line_2d stuff here (e.g. colour)
+		line_2d = Line2D.new()
+		collision_shape_2d = CollisionShape2D.new()
+	
+	
+	func hide():
+		line_2d.visible = false
+		collision_shape_2d.disabled = true
+	
+	
+	func set_position(point_set: PoolVector2Array):
+		assert(point_set.size() == 2)
+		line_2d.points = point_set
+		var shape = SegmentShape2D.new()
+		shape.a = point_set[0]
+		shape.b = point_set[1]
+		collision_shape_2d.shape = shape
+	
+	func setup(color: Color, outline_width: float):
+		line_2d.default_color = color
+		line_2d.width = outline_width
+	
+	
+	func show():
+		line_2d.visible = true
+		collision_shape_2d.disabled = false
 
 
 func _init(player_id: int = 0):
@@ -34,13 +73,13 @@ func _init(player_id: int = 0):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set("collision/safe_margin", collision_safe_margin)
-	change_shape(cur_sides) # create triangle
-	print_points()
+	get_node("InnerBoundary").get_node("VisibleShape").color = color.lightened(0.5)
+	_change_shape(cur_sides) # create triangle
 
 
 func _physics_process(delta):
 	# add xbox controls?
-	var accel_dir = Vector2()
+	var accel_dir := Vector2()
 	if Input.is_action_pressed("move_up"):
 		accel_dir.y -= 1 # y starts from top of screen
 	if Input.is_action_pressed("move_down"):
@@ -83,13 +122,23 @@ func _physics_process(delta):
 	rotate(rot_velocity * delta) # do multiply delta by velocity
 
 
+func _on_body_entered(body: Node):
+	if body.is_in_group("Balls"):
+		_on_player_died()
+
+
 func _on_difficulty_change():
 	# will need adjustment
 	cur_sides += 1
-	radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
+	m_radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
 	player_accel *= 1.1 # not necessary if the shape doesn't change size
 	max_velocity *= 1.1 # see above
-	change_shape(cur_sides)
+	_change_shape(cur_sides)
+
+
+func _on_player_died():
+	queue_free() # delete this player
+	# do whatever necessary to show the player died here
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -97,54 +146,86 @@ func _on_difficulty_change():
 #	pass
 
 
-func apply_points(sides: int, point_sets: Array):
+func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Array):
 	assert(sides == point_sets.size())
-	# lines array (put new item in array (erase previous? or modify them?)
-	# collision_lines array
-	# apply to lines
-	
-	
-	# apply to collision lines
-	
-	# do stuff here
+	var id := 0
+	# reassign existing points if they exist
+	while id < line_segments.size():
+		line_segments[id].set_position(point_sets[id])
+		id += 1
+	# create new points if needed
+	while id < point_sets.size():
+		line_segments.append(LineSegment.new())
+		line_segments[-1].setup(color, outline_width)
+		line_segments[-1].set_position(point_sets[id])
+		add_child(line_segments[-1].line_2d)
+		add_child(line_segments[-1].collision_shape_2d)
+		id += 1
+	# assign points to inner boundary polygon
+	get_node("InnerBoundary").get_node("CollisionShape").polygon = polygon_points
+	get_node("InnerBoundary").get_node("VisibleShape").polygon = polygon_points
 
 
-func change_shape(sides: int) -> void:
-	var point_sets = generate_line_points(sides)
-	apply_points(sides, point_sets) # works
-	print_line_points(point_sets) # works
-	#shape.polygon = points
-	#collisionShape.set_polygon(points)
+func _change_hidden_sides(hidden_sides: int):
+	# should never be less than 2 visible sides (or player orientation is difficult to determine)
+	assert(line_segments.size() - hidden_sides >= 2)
+	for line_segment in line_segments:
+		line_segment.show()
+	var possible_hidden_sides = range(0, line_segments.size() - 1)
+	for _i in range(hidden_sides):
+		# same thing but shorter
+		# line_segments[possible_hidden_sides.pop_at(random.randi_range(0, possible_hidden_sides.size() - 1))].hide()
+		# choose random element from possible_hidden_sides
+		var id: int = random.randi_range(0, possible_hidden_sides.size() - 1)
+		# find the side id
+		var hidden_side_id: int = possible_hidden_sides[id]
+		# delete the id so it cannot be hidden more than once
+		possible_hidden_sides.pop_at(id)
+		# hide the segment
+		line_segments[hidden_side_id].hide()
 
 
-func find_point(sides, pointID) -> Vector2:
+func _change_shape(sides: int):
+	var point_sets = _generate_line_points(sides)
+	var polygon_points = _generate_polygon_points(sides)
+	_apply_points(sides, point_sets, polygon_points)
+	_print_line_points(point_sets)
+	_print_polygon_points(polygon_points)
+
+
+func _find_point(sides, pointID, radius) -> Vector2:
 	var x: float = cos((2 * PI * pointID) / sides) * radius
 	var y: float = sin((2 * PI * pointID) / sides) * radius
 	return Vector2(x, y)
 
 
-func generate_line_points(sides: int) -> Array:
+func _generate_line_points(sides: int) -> Array:
 	var point_sets := Array()
-	var point_id = 0
+	var point_id := 0
 	for _set_id in range(sides):
 		var set := PoolVector2Array()
-		set.append(find_point(sides, point_id)) # first point
+		set.append(_find_point(sides, point_id, m_radius)) # first point
 		point_id += 1
-		set.append(find_point(sides, point_id)) # second point
+		set.append(_find_point(sides, point_id, m_radius)) # second point
 		# do not need to increment since point is shared with next line
 		point_sets.append(set)
 	return point_sets
 
 
-func generate_points(sides: int) -> PoolVector2Array:
+func _generate_polygon_points(sides: int) -> PoolVector2Array:
 	var points := PoolVector2Array()
 	for point in range(sides):
-		var coordinates := find_point(sides, point)
+		# shrink polygon so that it does not overlap the area occupied by the lines
+		var coordinates := _find_point(sides, point, m_radius - outline_width / 2)
 		points.append(coordinates)
 	return points
 
 
-func print_line_points(point_sets: Array) -> void:
+func get_pos():
+	return position
+
+
+func _print_line_points(point_sets: Array):
 	# point_sets is an Array<PoolVector2Array>[sides]
 	# PoolVector2Array is an Array<Vector2>[2]
 	# Total: Array<Array<Vector2>[2]>[sides]
@@ -155,16 +236,7 @@ func print_line_points(point_sets: Array) -> void:
 			print("X: %.0f, Y: %.0f" % [point.x, point.y])
 
 
-func print_points() -> void:
-	var polygon_points = shape.polygon
+func _print_polygon_points(polygon_points: PoolVector2Array):
 	print("Polygon Points:")
 	for point in polygon_points:
 		print("X: %.0f, Y: %.0f" % [point.x, point.y])
-	var collision_points = collisionShape.get_polygon()
-	print("Collision Points:")
-	for point in collision_points:
-		print("X: %.0f, Y: %.0f" % [point.x, point.y])
-
-
-func get_pos():
-	return position
