@@ -5,7 +5,7 @@ var m_player_id: int
 
 onready var collisionShape = get_node("CollisionPolygon2D")
 onready var shape = get_node("Polygon2D")
-onready var gravity_area = get_node("Gravity")
+onready var gravity_area = get_node("GravityArea")
 onready var tween
 
 export (int) var radius = 25 # pixels

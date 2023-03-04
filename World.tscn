@@ -47,29 +47,25 @@ shape = SubResource( 2 )
 shape = SubResource( 4 )
 
 [node name="TopWall" type="StaticBody2D" parent="."]
-position = Vector2( 0, -3 )
+position = Vector2( 0, -900 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TopWall"]
-position = Vector2( -2, -917 )
 shape = SubResource( 3 )
 
 [node name="RightWall" type="StaticBody2D" parent="."]
-position = Vector2( 1100, 500 )
+position = Vector2( 1340, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
-position = Vector2( -546, -308 )
 shape = SubResource( 5 )
 
 [node name="BottomWall" type="StaticBody2D" parent="."]
-position = Vector2( 502, 1100 )
+position = Vector2( 0, 900 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BottomWall"]
-position = Vector2( -516, -278 )
 shape = SubResource( 3 )
 
 [node name="LeftWall" type="StaticBody2D" parent="."]
-position = Vector2( 403, -532 )
+position = Vector2( -1340, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
-position = Vector2( -1748, 533 )
 shape = SubResource( 6 )

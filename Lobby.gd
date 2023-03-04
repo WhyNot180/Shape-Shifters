@@ -26,10 +26,12 @@ func _player_disconnected(id):
 func _connected_to_server():
 	yield(get_tree().create_timer(0.1), "timeout")
 	instance_player(get_tree().get_network_unique_id())
-	instance_client_ball()
+	Global.instance_client_ball(client_ball)
 
 func _server_disconnected():
-	Players.queue_free()
+	for n in Players.get_children():
+		Players.remove_child(n)
+		n.queue_free()
 	get_tree().change_scene("res://Server Menu.tscn")
 
 func _on_2_player_pressed():
@@ -51,6 +53,7 @@ func _on_Join(ip: String):
 		Network.ip_address = ip
 		Network.join_server()
 		get_tree().change_scene("res://World.tscn")
+		
 
 func instance_player(id):
 	var player_instance = Global.instance_node_at_location(player, Players, Vector2(rand_range(10, 990), rand_range(10, 990)))
@@ -59,8 +62,4 @@ func instance_player(id):
 
 func instance_server_ball(id):
 	var ball_instance = Global.instance_node_at_location(ball, Players, Vector2(rand_range(10, 990), rand_range(10, 990)))
-	ball_instance.name = "ball"
-
-func instance_client_ball():
-	var ball_instance = Global.instance_node(client_ball, Players)
 	ball_instance.name = "ball"

@@ -2,15 +2,12 @@ extends Node2D
 
 signal MORE_SIDES # should be sent from Stopwatch
 
-<<<<<<< HEAD
 var Ball = load("res://Ball.tscn")
-=======
 
-var Ball = preload("res://Ball.tscn")
-var Player = preload("res://Player.tscn")
+#var Ball = preload("res://Ball.tscn")
+#var Player = preload("res://Player.tscn")
 var players: Array
 var current_player_id: int = 0
->>>>>>> Ball-Gravity
 
 # should all be handled from stopwatch
 var difficulty = 15

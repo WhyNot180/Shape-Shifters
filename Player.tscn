@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 [gd_scene load_steps=4 format=2]
-=======
-[gd_scene load_steps=3 format=2]
->>>>>>> Ball-Gravity
 
 [ext_resource path="res://Player Grav.gd" type="Script" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=3]
@@ -38,4 +34,3 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_network_tick_rate_timeout"]
-[connection signal="change_grav" from="Gravity" to="Gravity" method="_change_grav"]
