@@ -12,43 +12,31 @@ _global_script_classes=[ {
 "base": "KinematicBody2D",
 "class": "Player",
 "language": "GDScript",
-"path": "res://Player.gd"
+"path": "res://Scenes/Player Scripts/Player.gd"
 }, {
-"base": "ConvexPolygonShape2D",
-"class": "ShapePoints",
-"language": "GDScript",
-"path": "res://ShapePoints.gd"
-}, {
-"base": "CollisionPolygon2D",
-"class": "ShapePoints2",
-"language": "GDScript",
-"path": "res://ShapePoints2.gd"
-}, {
-"base": "Node",
+"base": "Timer",
 "class": "Stopwatch",
 "language": "GDScript",
-"path": "res://Stopwatch.gd"
+"path": "res://Scenes/World Scripts/Stopwatch.gd"
 } ]
 _global_script_class_icons={
 "Player": "",
-"ShapePoints": "",
-"ShapePoints2": "",
 "Stopwatch": ""
 }
 
 [application]
 
 config/name="Twisted Pong"
-run/main_scene="res://Menu.tscn"
+run/main_scene="res://Scenes/Menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-Network="*res://Network.gd"
-Global="*res://Global.gd"
-Players="*res://Players.tscn"
-Lobby="*res://Lobby.gd"
-Balls="*res://Balls.gd"
+Network="*res://Autoload/Network.gd"
+Global="*res://Autoload/Global.gd"
+Players="*res://Autoload/Players.tscn"
+Lobby="*res://Autoload/Lobby.gd"
+Balls="*res://Autoload/Balls.gd"
 
 [display]
 
