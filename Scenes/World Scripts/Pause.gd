@@ -13,4 +13,7 @@ func _ready():
 
 func _unhandled_input(event):
 	if event.is_action_pressed("pause_game"):
-		get_tree().paused = !get_tree().paused
+		if get_tree().get_network_unique_id() == 1:
+			Network.disconnect_server()
+		else:
+			Network.disconnect_peer()

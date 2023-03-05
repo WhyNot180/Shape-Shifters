@@ -8,6 +8,10 @@ class_name Player
 
 signal MORE_SIDES
 
+signal increase_hidden_sides()
+
+var max_missing_sides = 1
+
 onready var gravity_area = get_node("GravityArea")
 onready var tween
 
@@ -138,15 +142,17 @@ func _physics_process(delta):
 			move_and_slide(puppet_player_velocity)
 
 func _on_body_entered(body: Node):
-	if body.is_in_group("Balls"):
-		_on_player_died()
+	if body is RigidBody2D:
+		rpc("_on_player_died")
 
 func _on_difficulty_change(sides):
 	cur_sides = sides
 	print("changing shape")
 	_change_shape(cur_sides)
 
-func _on_player_died():
+remotesync func _on_player_died():
+	hide()
+	yield(get_tree().create_timer(1), "timeout")
 	queue_free() # delete this player
 	# do whatever necessary to show the player died here
 
@@ -174,7 +180,7 @@ func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Arr
 
 
 puppet func _change_hidden_sides(hidden_sides: int, network_sides: Array):
-	if is_network_master():
+	if get_tree().get_network_unique_id() == 1:
 		# should never be less than 2 visible sides (or player orientation is difficult to determine)
 		assert(line_segments.size() - hidden_sides >= 2)
 		for line_segment in line_segments:
@@ -193,16 +199,21 @@ puppet func _change_hidden_sides(hidden_sides: int, network_sides: Array):
 			# hide the segment
 			side_ids.append(hidden_side_id)
 			line_segments[hidden_side_id].hide()
-		rpc("_change_hidden_sides", hidden_sides, side_ids)
-	elif str(get_tree().get_rpc_sender_id()) == name:
-		
-		for line_segment in line_segments:
-			line_segment.show
-		
-		for _i in network_sides:
-			var id: int = _i
-			# hide the segment
-			line_segments[id].hide()
+		rpc("client_change_hidden_sides", side_ids)
+
+remote func client_change_hidden_sides(network_sides: Array):
+	for line_segment in line_segments:
+		line_segment.show()
+	
+	for _i in network_sides:
+		var id: int = _i
+		# hide the segment
+		line_segments[id].hide()
+
+func _increase_missing_sides():
+	if line_segments.size() - (max_missing_sides + 1) >= 2:
+		max_missing_sides += 1
+	_change_hidden_sides(max_missing_sides, [])
 
 func _change_shape(sides: int):
 	var point_sets = _generate_line_points(sides)

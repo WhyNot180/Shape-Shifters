@@ -55,10 +55,10 @@ func _on_Join(ip: String):
 		
 
 func instance_player(id):
-	var player_instance = Global.instance_node_at_location(player, Players, Vector2(rand_range(10, 990), rand_range(10, 990)))
+	var player_instance = Global.instance_node_at_location(player, Players, Vector2(rand_range(10, 1910), rand_range(300, 1070)))
 	player_instance.name = str(id)
 	player_instance.set_network_master(id)
 
 func instance_server_ball(id):
-	var ball_instance = Global.instance_node_at_location(ball, Players, Vector2(rand_range(10, 990), rand_range(10, 990)))
+	var ball_instance = Global.instance_node_at_location(ball, Players, Vector2(rand_range(10, 1910), rand_range(10, 200)))
 	ball_instance.name = "ball"

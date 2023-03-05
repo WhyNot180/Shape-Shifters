@@ -33,6 +33,7 @@ polygon = PoolVector2Array( 0, 0, 0, 1, 1, 0 )
 [node name="VisibleShape" type="Polygon2D" parent="InnerBoundary"]
 
 [connection signal="MORE_SIDES" from="." to="." method="_on_difficulty_change"]
+[connection signal="increase_hidden_sides" from="." to="." method="_increase_missing_sides"]
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_network_tick_rate_timeout"]
 [connection signal="disable_gravity" from="GravityArea" to="GravityArea" method="_disable_gravity"]
 [connection signal="body_entered" from="InnerBoundary" to="." method="_on_body_entered"]

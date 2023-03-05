@@ -22,7 +22,6 @@ func _physics_process(delta):
 		gravity = new_grav
 
 remote func _disable_gravity():
-	print("disabling gravity...")
 	Balls.gravity_enabled = false
 	if get_tree().get_network_unique_id() == 1:
 		rpc("_disable_gravity")
@@ -30,7 +29,6 @@ remote func _disable_gravity():
 	gravity = 0
 
 remote func _enable_gravity():
-	print("enabling gravity...")
 	if get_tree().get_network_unique_id() == 1:
 		rpc("_enable_gravity")
 	grav_enable = true

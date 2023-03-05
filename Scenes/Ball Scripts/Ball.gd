@@ -1,6 +1,5 @@
 extends RigidBody2D
 
-
 export (float) var increased_gravity_scale = 10.0
 export (float) var normal_gravity_scale = 1.0
 
@@ -21,4 +20,7 @@ func _on_Ball_body_entered(body):
 	if body is KinematicBody2D:
 		get_tree().call_group("Players", "_enable_gravity")
 		yield(get_tree().create_timer(0.03), "timeout")
-		Players.get_node(body.name + "/GravityArea").emit_signal("disable_gravity")
+		if body != null:
+			Players.get_node(body.name + "/GravityArea").emit_signal("disable_gravity")
+			#Players.get_node(body.name).emit_signal("increase_hidden_sides")
+			body.emit_signal("increase_hidden_sides")

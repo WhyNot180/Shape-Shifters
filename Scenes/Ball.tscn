@@ -9,7 +9,7 @@ bounce = 1.0
 [sub_resource type="CircleShape2D" id=1]
 radius = 14.83
 
-[node name="Ball" type="RigidBody2D"]
+[node name="Ball" type="RigidBody2D" groups=["Ball"]]
 physics_material_override = SubResource( 2 )
 continuous_cd = 1
 contacts_reported = 1

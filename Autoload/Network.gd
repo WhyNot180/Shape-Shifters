@@ -30,6 +30,15 @@ func join_server():
 	print(client.get_connection_status())
 	get_tree().set_network_peer(client)
 
+func disconnect_server():
+	rpc("disconnect_peer")
+	get_tree().network_peer = null
+	Lobby._server_disconnected()
+
+remote func disconnect_peer():
+	get_tree().network_peer = null
+	Lobby._server_disconnected()
+
 func _connected_to_server():
 	print("connected successfully")
 
