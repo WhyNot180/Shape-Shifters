@@ -15,6 +15,11 @@ var max_missing_sides = 1
 onready var gravity_area = get_node("GravityArea")
 onready var tween
 
+var username_text = load("res://Scenes/Username.tscn")
+
+var username setget username_set
+var username_instance = null
+
 var m_player_id: int
 var line_segments: Array
 var random = RandomNumberGenerator.new()
@@ -23,7 +28,7 @@ export (Color) var color = Color.lightblue
 export (int) var m_radius = 25 # pixels
 export (int) var outline_width = 10 # pixels
 # making this stupidly large still doesn't do all too much
-export (float) var collision_safe_margin = 25.0 # pixels
+export (float) var collision_safe_margin = 15.0 # pixels
 export (float) var max_velocity = 400.0 # pixels/second
 export (float) var player_accel = 1000.0 # pixels/second^2
 export (float) var max_rot_velocity = 2.5 * (2 * PI) # radians/s clockwise-positive 
@@ -37,6 +42,8 @@ puppet var puppet_player_position = Vector2(0, 0) setget puppet_player_position_
 puppet var puppet_player_velocity = Vector2(0, 0)
 puppet var puppet_player_rotation = 0
 puppet var puppet_rot_velocity = 0.0
+
+puppet var puppet_username_text = "" setget puppet_username_text_set
 
 # this becomes a bad idea once _change_sides() is called with a different number
 var cur_sides: int = 3 # start at triangle
@@ -87,13 +94,37 @@ func _init(player_id: int = 0):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	tween = get_node("Tween")
+	get_tree().connect("network_peer_connected", self, "_network_peer_connected")
+	username_instance = Global.instance_node_at_location(username_text, Players, global_position)
+	username_instance.player_following = self
 	set("collision/safe_margin", collision_safe_margin)
 	get_node("InnerBoundary").get_node("VisibleShape").color = color.lightened(0.5)
 	_change_shape(cur_sides) # create triangle
 
+func _network_peer_connected(id):
+	rset_id(id, "puppet_username_text", username)
+
+func username_set(new_value):
+	username = new_value
+	if is_network_master() and username_instance != null:
+		username_instance.text = username
+		rset("puppet_username_text", username)
+
+func puppet_username_text_set(new_value):
+	puppet_username_text = new_value
+	
+	if not is_network_master() and username_instance != null:
+		username_instance.text = puppet_username_text
+	_change_shape(cur_sides)
+
+func _process(delta):
+	if username_instance != null:
+		username_instance.name = "username" + name
+
 
 func _physics_process(delta):
 	# add xbox controls?
+	
 	if is_network_master():
 		var accel_dir := Vector2()
 		if Input.is_action_pressed("move_up"):
@@ -151,6 +182,9 @@ func _on_difficulty_change(sides):
 	_change_shape(cur_sides)
 
 remotesync func _on_player_died():
+	username_instance.player_following = null
+	if username_instance != null:
+		username_instance.visible = false
 	hide()
 	yield(get_tree().create_timer(1), "timeout")
 	queue_free() # delete this player

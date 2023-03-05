@@ -46,4 +46,5 @@ func _server_disconnected():
 	print("disconnected from the server")
 
 func _connection_failed():
+	Lobby._server_disconnected()
 	print("failed")
