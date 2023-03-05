@@ -17,11 +17,10 @@ export (float) var max_rot_velocity = 2.5 * (2 * PI) # radians/s clockwise-posit
 export (float) var player_rot_accel = 2 * PI # radians/s^2 clockwise-positive
 # 1/sqrt(seconds) to decelerate
 export (float) var player_auto_decel_scale = 4.0 # 1/sqrt(seconds)
-# find out what unit this is
-export (float) var player_rot_auto_decel_scale = 1.0 # unit here
+# 1/seconds to decelerate (not correct)
+export (float) var player_rot_auto_decel_scale = 1 # 1/seconds
 
-# this becomes a bad idea once _change_sides() is called with a different number
-var cur_sides: int = 3 # start at triangle
+
 var cur_velocity := Vector2()
 var rot_velocity := 0.0 # radians/s clockwise-positive
 # clockwise-positive
@@ -69,11 +68,10 @@ func _init(player_id: int = 0):
 func _ready():
 	set("collision/safe_margin", collision_safe_margin)
 	get_node("InnerBoundary").get_node("VisibleShape").color = color.lightened(0.5)
-	_change_sides(cur_sides) # create triangle
+	_change_sides(3) # create triangle
 
 
 func _physics_process(delta):
-	# add xbox controls?
 	var accel_dir := Vector2()
 	if Input.is_action_pressed("move_up"):
 		accel_dir.y -= 1 # y starts from top of screen
@@ -123,23 +121,16 @@ func _on_body_entered(body: Node):
 		_on_player_died()
 
 
-func _on_difficulty_change():
-	# will need adjustment
-	cur_sides += 1
-	m_radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
-	player_accel *= 1.1 # not necessary if the shape doesn't change size
-	max_velocity *= 1.1 # see above
-	_change_sides(cur_sides)
+#func _on_difficulty_change():
+# please adjust these variables to a level that works with multiple shapes (they will remain constant)
+#	m_radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
+#	player_accel *= 1.1 # not necessary if the shape doesn't change size
+#	max_velocity *= 1.1 # see above
 
 
 func _on_player_died():
 	queue_free() # delete this player
 	# do whatever necessary to show the player died here
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 
 
 func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Array):
