@@ -20,4 +20,5 @@ func _on_VisibilityNotifier2D_viewport_exited(_viewport):
 func _on_Ball_body_entered(body):
 	if body is KinematicBody2D:
 		get_tree().call_group("Players", "_enable_gravity")
+		yield(get_tree().create_timer(0.03), "timeout")
 		Players.get_node(body.name + "/GravityArea").emit_signal("disable_gravity")
