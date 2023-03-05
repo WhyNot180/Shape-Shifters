@@ -74,7 +74,7 @@ func _init(player_id: int = 0):
 func _ready():
 	set("collision/safe_margin", collision_safe_margin)
 	get_node("InnerBoundary").get_node("VisibleShape").color = color.lightened(0.5)
-	_change_shape(cur_sides) # create triangle
+	_change_sides(cur_sides) # create triangle
 
 
 func _physics_process(delta):
@@ -133,10 +133,11 @@ func _on_difficulty_change():
 	m_radius *= 1.15 # likely want to limit this to a maximum size, or keep the same size constantly
 	player_accel *= 1.1 # not necessary if the shape doesn't change size
 	max_velocity *= 1.1 # see above
-	_change_shape(cur_sides)
+	_change_sides(cur_sides)
 
 
 func _on_player_died():
+	print("I have decided to die")
 	queue_free() # delete this player
 	# do whatever necessary to show the player died here
 
@@ -185,7 +186,7 @@ func _change_hidden_sides(hidden_sides: int):
 		line_segments[hidden_side_id].hide()
 
 
-func _change_shape(sides: int):
+func _change_sides(sides: int):
 	var point_sets = _generate_line_points(sides)
 	var polygon_points = _generate_polygon_points(sides)
 	_apply_points(sides, point_sets, polygon_points)

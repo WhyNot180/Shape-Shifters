@@ -1,21 +1,10 @@
 extends Node2D
 
-signal MORE_SIDES # should be sent from Stopwatch
-signal CHANGE_HIDDEN_SIDES
-
 
 var Ball = preload("res://Ball.tscn")
 var Player = preload("res://Player.tscn")
 var players: Array
 var current_player_id: int = 0
-
-# should all be handled from stopwatch
-var difficulty = 15
-var difficulty_modulo
-var seconds_elapsed = 0
-var last_recorded_time = 0
-var amount_sides = 3
-var missing_sides = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -27,6 +16,9 @@ func _ready():
 func _start_game():
 	# create player 0
 	_on_player_join()
+	get_node("TimerController").set_normal_difficulty()
+	get_node("TimerController")._on_game_start()
+	# select stopwatch difficulty here
 
 
 # rename/modify as necessary, placeholder
@@ -36,35 +28,17 @@ func _on_player_join():
 	add_child(players[current_player_id])
 	# connect player signals
 # warning-ignore:return_value_discarded
-	connect("MORE_SIDES", players[current_player_id], "_on_difficulty_change")
-# warning-ignore:return_value_discarded	
-	connect("CHANGE_HIDDEN_SIDES", players[current_player_id], "_change_hidden_sides")
+	get_node("TimerController").connect("gravity_change", players[current_player_id], "_change_gravity")
+# warning-ignore:return_value_discarded
+	get_node("TimerController").connect("side_amount_change", players[current_player_id], "_change_sides")
+# warning-ignore:return_value_discarded
+	get_node("TimerController").connect("hidden_side_amount_change", players[current_player_id], "_change_hidden_sides")
 	current_player_id += 1
 
 
 # rename/modify as necessary, placeholder
 func _on_player_leave(player_id):
 	players[player_id].queue_free()
-
-
-# move difficulty changes to Stopwatch
-#func timer_timeout():
-#	seconds_elapsed += 1
-#	if(seconds_elapsed % difficulty == 0):
-#		difficulty_modulo = seconds_elapsed % 3
-#		match difficulty_modulo:
-#			0:
-#				amount_sides += 1
-#			1:
-#				gravity += 50
-#				gravity_area.emit_signal("change_grav", gravity)
-#			2:
-#				if(missing_sides < amount_sides - 1):
-#					missing_sides += 1
-#			_:
-#				print("entered default")
-#		if(difficulty != 1): difficulty -= 1
-#	pass
 
 
 func _unhandled_input(event):
@@ -76,6 +50,6 @@ func _unhandled_input(event):
 			b.add_to_group("Balls")
 			b.set_position(get_node("BallStartPos").position)
 			emit_signal("MORE_SIDES")
-		if event.button_index == BUTTON_RIGHT:
-			missing_sides += 1
-			emit_signal("CHANGE_HIDDEN_SIDES", missing_sides)
+		#if event.button_index == BUTTON_RIGHT:
+		#	#missing_sides += 1
+		#	emit_signal("CHANGE_HIDDEN_SIDES", missing_sides)

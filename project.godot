@@ -20,14 +20,14 @@ _global_script_classes=[ {
 "path": "res://Player.gd"
 }, {
 "base": "Node",
-"class": "Stopwatch",
+"class": "TimerController",
 "language": "GDScript",
-"path": "res://Stopwatch.gd"
+"path": "res://TimerController.gd"
 } ]
 _global_script_class_icons={
 "GitAPI": "",
 "Player": "",
-"Stopwatch": ""
+"TimerController": ""
 }
 
 [application]
