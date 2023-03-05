@@ -2,11 +2,6 @@ extends KinematicBody2D
 class_name Player
 
 
-# should we keep the other point generating functions to generate a CollisionShape2D for the scoring system?
-# yes
-# also add the CollisionShape2d to the player, it will silence the warning too
-
-
 var m_player_id: int
 var line_segments: Array
 var random = RandomNumberGenerator.new()

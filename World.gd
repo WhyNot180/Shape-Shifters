@@ -49,7 +49,3 @@ func _unhandled_input(event):
 			add_child(b)
 			b.add_to_group("Balls")
 			b.set_position(get_node("BallStartPos").position)
-			emit_signal("MORE_SIDES")
-		#if event.button_index == BUTTON_RIGHT:
-		#	#missing_sides += 1
-		#	emit_signal("CHANGE_HIDDEN_SIDES", missing_sides)
