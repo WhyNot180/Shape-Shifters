@@ -117,6 +117,7 @@ func _physics_process(delta):
 	rotate(rot_velocity * delta) # do multiply delta by velocity
 
 
+# way too sensitive
 func _on_body_entered(body: Node):
 	if body.is_in_group("Balls"):
 		_on_player_died()
@@ -132,7 +133,6 @@ func _on_difficulty_change():
 
 
 func _on_player_died():
-	print("I have decided to die")
 	queue_free() # delete this player
 	# do whatever necessary to show the player died here
 
