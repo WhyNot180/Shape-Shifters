@@ -1,5 +1,6 @@
 extends Button
 
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -14,5 +15,6 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func _on_how_to_pressed():
-	get_tree().change_scene("res://howtoplay.tscn")
+
+func _on_back_pressed():
+	get_tree().quit()

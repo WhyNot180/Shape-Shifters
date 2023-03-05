@@ -1,10 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://LineEdit.gd" type="Script" id=1]
+[ext_resource path="res://Server menu.gd" type="Script" id=2]
+[ext_resource path="res://return.gd" type="Script" id=3]
 
 [node name="server  menu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_top = 0.5
@@ -54,6 +57,14 @@ margin_bottom = -3.05176e-05
 text = "
 HOST"
 align = 1
+
+[node name="Back" type="Button" parent="."]
+margin_left = 345.0
+margin_top = 688.0
+margin_right = 643.0
+margin_bottom = 837.0
+text = "Back"
+script = ExtResource( 3 )
 
 [connection signal="text_entered" from="lan port" to="lan port" method="_on_lan_port_text_entered"]
 [connection signal="text_entered" from="player count" to="player count" method="_on_player_count_text_entered"]
