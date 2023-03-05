@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scenes/Player Scripts/Player Grav.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Player Scripts/Player.gd" type="Script" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 960.0
+
+[node name="Player" type="KinematicBody2D" groups=["Players"]]
+script = ExtResource( 3 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Network_tick_rate" type="Timer" parent="."]
+wait_time = 0.03
+autostart = true
+
+[node name="GravityArea" type="Area2D" parent="." groups=["Players"]]
+space_override = 1
+gravity_point = true
+gravity_vec = Vector2( 0, 0 )
+gravity = 500.0
+script = ExtResource( 1 )
+
+[node name="GravityShape" type="CollisionShape2D" parent="GravityArea"]
+shape = SubResource( 1 )
+
+[node name="InnerBoundary" type="Area2D" parent="."]
+
+[node name="CollisionShape" type="CollisionPolygon2D" parent="InnerBoundary"]
+polygon = PoolVector2Array( 0, 0, 0, 1, 1, 0 )
+
+[node name="VisibleShape" type="Polygon2D" parent="InnerBoundary"]
+
+[connection signal="MORE_SIDES" from="." to="." method="_on_difficulty_change"]
+[connection signal="increase_hidden_sides" from="." to="." method="_increase_missing_sides"]
+[connection signal="timeout" from="Network_tick_rate" to="." method="_on_network_tick_rate_timeout"]
+[connection signal="disable_gravity" from="GravityArea" to="GravityArea" method="_disable_gravity"]
+[connection signal="body_entered" from="InnerBoundary" to="." method="_on_body_entered"]
