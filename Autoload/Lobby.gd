@@ -33,23 +33,11 @@ func _server_disconnected():
 		n.queue_free()
 	get_tree().change_scene("res://Scenes/Server Menu.tscn")
 
-func _on_2_player_pressed():
-	Network.create_server(2)
-	print(str(Network.ip_address))
-	get_tree().change_scene("res://Scenes/World.tscn")
-	instance_player(get_tree().get_network_unique_id())
-	instance_server_ball(1)
-
-func _on_3_player_pressed():
-	Network.create_server(3)
-	print(str(Network.ip_address))
-	get_tree().change_scene("res://Scenes/World.tscn")
-	instance_player(get_tree().get_network_unique_id())
-	instance_server_ball(1)
-
-func _on_Join(ip: String):
+func _on_Join():
+	var ip = get_node("VBoxContainer2/Server IP").text
 	if ip != "" and ip.is_valid_ip_address():
 		Network.ip_address = ip
+		Network.port = get_node("VBoxContainer2/Port").text.to_int()
 		Network.join_server()
 		get_tree().change_scene("res://Scenes/World.tscn")
 		
@@ -62,3 +50,13 @@ func instance_player(id):
 func instance_server_ball(id):
 	var ball_instance = Global.instance_node_at_location(ball, Players, Vector2(rand_range(10, 1910), rand_range(10, 200)))
 	ball_instance.name = "ball"
+
+
+func _on_Create_Server():
+	Network.max_clients = get_node("VBoxContainer/Number of players").text.to_int()
+	Network.port = get_node("VBoxContainer/Port").text.to_int()
+	Network.create_server()
+	print(str(Network.ip_address))
+	get_tree().change_scene("res://Scenes/World.tscn")
+	instance_player(get_tree().get_network_unique_id())
+	instance_server_ball(1)
