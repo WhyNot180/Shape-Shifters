@@ -4,6 +4,8 @@ var tween
 
 var Client_Ball
 
+var gravity_enabled = false
+
 puppet var puppet_ball_position = Vector2(0, 0) setget puppet_ball_position_set
 puppet var puppet_ball_velocity = Vector2(0, 0)
 

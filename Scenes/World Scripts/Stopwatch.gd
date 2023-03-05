@@ -21,7 +21,7 @@ func _Stopwatch_timeout():
 	if id == 1:
 		elapsed_time += 1
 		if(elapsed_time % difficulty == 0):
-			difficulty_modulo = elapsed_time % 3
+			difficulty_modulo = elapsed_time % 2
 			match difficulty_modulo:
 				0:
 					amount_sides += 1
@@ -29,9 +29,6 @@ func _Stopwatch_timeout():
 				1:
 					gravity += 50
 					rpc("change_gravity", gravity)
-				2:
-					if(missing_sides < amount_sides - 1):
-						missing_sides += 1
 				_:
 					print("entered default")
 			if(difficulty != 1): difficulty -= 1

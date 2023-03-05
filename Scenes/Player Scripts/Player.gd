@@ -173,24 +173,36 @@ func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Arr
 	get_node("InnerBoundary").get_node("VisibleShape").polygon = polygon_points
 
 
-func _change_hidden_sides(hidden_sides: int):
-	# should never be less than 2 visible sides (or player orientation is difficult to determine)
-	assert(line_segments.size() - hidden_sides >= 2)
-	for line_segment in line_segments:
-		line_segment.show()
-	var possible_hidden_sides = range(0, line_segments.size() - 1)
-	for _i in range(hidden_sides):
-		# same thing but shorter
-		# line_segments[possible_hidden_sides.pop_at(random.randi_range(0, possible_hidden_sides.size() - 1))].hide()
-		# choose random element from possible_hidden_sides
-		var id: int = random.randi_range(0, possible_hidden_sides.size() - 1)
-		# find the side id
-		var hidden_side_id: int = possible_hidden_sides[id]
-		# delete the id so it cannot be hidden more than once
-		possible_hidden_sides.pop_at(id)
-		# hide the segment
-		line_segments[hidden_side_id].hide()
-
+puppet func _change_hidden_sides(hidden_sides: int, network_sides: Array):
+	if is_network_master():
+		# should never be less than 2 visible sides (or player orientation is difficult to determine)
+		assert(line_segments.size() - hidden_sides >= 2)
+		for line_segment in line_segments:
+			line_segment.show()
+		var possible_hidden_sides = range(0, line_segments.size() - 1)
+		var side_ids = []
+		for _i in range(hidden_sides):
+			# same thing but shorter
+			# line_segments[possible_hidden_sides.pop_at(random.randi_range(0, possible_hidden_sides.size() - 1))].hide()
+			# choose random element from possible_hidden_sides
+			var id: int = random.randi_range(0, possible_hidden_sides.size() - 1)
+			# find the side id
+			var hidden_side_id: int = possible_hidden_sides[id]
+			# delete the id so it cannot be hidden more than once
+			possible_hidden_sides.pop_at(id)
+			# hide the segment
+			side_ids.append(hidden_side_id)
+			line_segments[hidden_side_id].hide()
+		rpc("_change_hidden_sides", hidden_sides, side_ids)
+	elif str(get_tree().get_rpc_sender_id()) == name:
+		
+		for line_segment in line_segments:
+			line_segment.show
+		
+		for _i in network_sides:
+			var id: int = _i
+			# hide the segment
+			line_segments[id].hide()
 
 func _change_shape(sides: int):
 	var point_sets = _generate_line_points(sides)

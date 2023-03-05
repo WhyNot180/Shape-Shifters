@@ -16,3 +16,8 @@ func _on_VisibilityNotifier2D_viewport_entered(_viewport):
 
 func _on_VisibilityNotifier2D_viewport_exited(_viewport):
 	gravity_scale = increased_gravity_scale
+
+func _on_Ball_body_entered(body):
+	if body is KinematicBody2D:
+		get_tree().call_group("Players", "_enable_gravity")
+		Players.get_node(body.name + "/GravityArea").emit_signal("disable_gravity")
