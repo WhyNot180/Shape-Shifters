@@ -21,7 +21,7 @@ var line_segments: Array
 var random = RandomNumberGenerator.new()
 
 export (Color) var color = Color.lightblue
-export (int) var m_radius = 50 # pixels
+export (int) var m_radius = 40 # pixels
 export (int) var outline_width = 10 # pixels
 # making this stupidly large still doesn't do all too much
 export (float) var collision_safe_margin = 15.0 # pixels
@@ -202,7 +202,7 @@ func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Arr
 	var id := 0
 	# reassign existing points if they exist
 	while id < line_segments.size():
-		line_segments[id].set_position(point_sets[id])
+		line_segments[id].set_position(point_sets[id], outline_width)
 		id += 1
 	# create new points if needed
 	while id < point_sets.size():
