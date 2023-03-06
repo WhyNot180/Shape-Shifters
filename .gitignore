@@ -11,3 +11,5 @@
 export_presets.cfg
 # Auto-generated Mono files
 .mono/
+# Exported files
+Export/
