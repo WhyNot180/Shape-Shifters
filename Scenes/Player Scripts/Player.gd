@@ -1,10 +1,6 @@
 extends KinematicBody2D
 class_name Player
 
-# should we keep the other point generating functions to generate a CollisionShape2D for the scoring system?
-# yes
-# also add the CollisionShape2d to the player, it will silence the warning too
-
 
 signal MORE_SIDES
 
@@ -25,7 +21,7 @@ var line_segments: Array
 var random = RandomNumberGenerator.new()
 
 export (Color) var color = Color.lightblue
-export (int) var m_radius = 25 # pixels
+export (int) var m_radius = 50 # pixels
 export (int) var outline_width = 10 # pixels
 # making this stupidly large still doesn't do all too much
 export (float) var collision_safe_margin = 15.0 # pixels
@@ -65,22 +61,30 @@ class LineSegment:
 		collision_shape_2d = CollisionShape2D.new()
 
 
+	func _convert_to_rectangle(point_set: PoolVector2Array, outline_width: float):
+		var width_extent = outline_width / 2
+		var height_extent = point_set[0].distance_to(point_set[1]) / 2
+		return Vector2(height_extent, width_extent)
+
+
 	func hide():
 		line_2d.visible = false
 		collision_shape_2d.disabled = true
 
 
-	func set_position(point_set: PoolVector2Array):
+	func set_position(point_set: PoolVector2Array, outline_width: float):
 		assert(point_set.size() == 2)
 		line_2d.points = point_set
-		var shape = SegmentShape2D.new()
-		shape.a = point_set[0]
-		shape.b = point_set[1]
-		collision_shape_2d.shape = shape
-
-	func setup(color: Color, outline_width: float):
-		line_2d.default_color = color
 		line_2d.width = outline_width
+		var shape = RectangleShape2D.new()
+		shape.extents = _convert_to_rectangle(point_set, outline_width)
+		collision_shape_2d.shape = shape
+		collision_shape_2d.position = (point_set[0] + point_set[1]) / 2
+		collision_shape_2d.rotation = point_set[0].angle_to_point(point_set[1])
+
+
+	func setup(color: Color):
+		line_2d.default_color = color
 
 
 	func show():
@@ -203,8 +207,8 @@ func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Arr
 	# create new points if needed
 	while id < point_sets.size():
 		line_segments.append(LineSegment.new())
-		line_segments[-1].setup(color, outline_width)
-		line_segments[-1].set_position(point_sets[id])
+		line_segments[-1].setup(color)
+		line_segments[-1].set_position(point_sets[id], outline_width)
 		add_child(line_segments[-1].line_2d)
 		add_child(line_segments[-1].collision_shape_2d)
 		id += 1
