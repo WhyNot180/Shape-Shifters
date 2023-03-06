@@ -23,6 +23,13 @@ extents = Vector2( 100, 1000 )
 position = Vector2( 960, 540 )
 script = ExtResource( 1 )
 
+[node name="HostIPLabel" type="Label" parent="."]
+margin_left = -945.0
+margin_top = -524.0
+margin_right = -790.0
+margin_bottom = -510.0
+text = "Host IP Address:"
+
 [node name="BallStartPos" type="Node2D" parent="."]
 position = Vector2( -480, -270 )
 
