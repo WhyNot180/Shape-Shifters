@@ -3,7 +3,7 @@
 
 # See https://docs.godotengine.org/en/stable/tutorials/best_practices/version_control_systems.html
 # Imported files
-./import
+.import/
 # Imported CSV translations
 *.translation
 # Export presets, can contain sensitive information
