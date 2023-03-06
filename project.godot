@@ -32,7 +32,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Twisted Pong"
+config/name="Shape Shifters"
 run/main_scene="res://Scenes/Menu.tscn"
 config/icon="res://icon.png"
 
