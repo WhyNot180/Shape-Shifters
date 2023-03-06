@@ -1,4 +1,4 @@
-# Twisted-Pong
+# Shape Shifters
 
 ## Objective of the game
 
