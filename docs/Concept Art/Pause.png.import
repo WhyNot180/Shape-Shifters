@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/difficultly singleplayer.png-efd023873ce8eac2ef852679333aaf96.stex"
+path="res://.import/Pause.png-1bf23be5d494307ea0b2a74b853b31cc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/difficultly singleplayer.png"
-dest_files=[ "res://.import/difficultly singleplayer.png-efd023873ce8eac2ef852679333aaf96.stex" ]
+source_file="res://docs/Concept Art/Pause.png"
+dest_files=[ "res://.import/Pause.png-1bf23be5d494307ea0b2a74b853b31cc.stex" ]
 
 [params]
 
