@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/base diff single player.png-2992268bfa4710c04280a2e1a5447469.stex"
+path="res://.import/base diff single player.png-cff6c684029a8abef4ece8d875e6b0f8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/base diff single player.png"
-dest_files=[ "res://.import/base diff single player.png-2992268bfa4710c04280a2e1a5447469.stex" ]
+source_file="res://docs/Concept Art/base diff single player.png"
+dest_files=[ "res://.import/base diff single player.png-cff6c684029a8abef4ece8d875e6b0f8.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/base diff as time contines.png-2ce28e76d275ad2ace8acd9aa3c42b19.stex"
+path="res://.import/base diff as time contines.png-f76a706f255724caa7bb474cd7c3d958.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/base diff as time contines.png"
-dest_files=[ "res://.import/base diff as time contines.png-2ce28e76d275ad2ace8acd9aa3c42b19.stex" ]
+source_file="res://docs/Concept Art/base diff as time contines.png"
+dest_files=[ "res://.import/base diff as time contines.png-f76a706f255724caa7bb474cd7c3d958.stex" ]
 
 [params]
 
