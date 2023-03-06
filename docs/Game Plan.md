@@ -1,6 +1,5 @@
 # Gameplay
 ## General
-Used both in singleplayer and multiplayer
 ### Layout
 * The player controls a shape, which they can rotate and translate.
 	* This shape has a variable amount of sides, which changes based on the difficulty.
@@ -53,7 +52,6 @@ Used both in singleplayer and multiplayer
 		* This speeds up the ball, reducing reaction time
 	* **Increase** the amount of sides the shape has
 		* Each side is smaller, and harder to defend
-		* > What do we do when the sizes get too small and the ball cannot go through them? Make sides beside each other disappear in groups to have large enough gaps?
 	* **Decrease** the time interval between when sides disappear
 		* The player has to adjust their strategy more often
 	* **Increase** the amount of sides that disappear
@@ -93,26 +91,25 @@ Used both in singleplayer and multiplayer
 * The game ends when one player is still alive. This player wins the game.
 * When a ball enters the centre of a player's shape, their shape and number are no longer shown on the game area.
 	* The player has lost the game.
-	> Should there be an indication that they died?
+	> Indicate the player has died.
 
 ### Player Controls
-* Each player must use a different input device.
+* Each player plays on a seperate device.
 * Each player controls a seperate shape, using the same controls as singleplayer.
 
 ## Physics
 ### Shape
 * How are collisions handled between two shapes in multiplayer?
-	> * Elastic collisions:
-	>	* 
-	>	*
-	> * 
-* shape should be pulled towards the centre of the map when going out of bounds
-	> should not be affected by gravity while in bounds
-	> * see "Spacewar"
+	> Elastic collisions?
+* Player shapes are never affected by gravity.
+~~* shape should be pulled towards the centre of the map when going out of bounds~~
+	> ~~Should not be affected by gravity while in bounds~~
+	> ~~* see "Spacewar"~~
 
 ### Ball
-* affected by rotation of shape
-	> spin faster = accelerate ball
-* affected by gravity (pulled towards centre)
-	> elastic collision with shape
-		> i.e. it bounces off at the same rate it hit the shape
+* Balls are pulled towards the centre of the game area when they are not affected by a player.
+* When balls are close to a player, they will be attracted to the player's centre.
+	* When the ball collides with the player, it will stop being attracted to the player.
+	* The ball will resume being attracted to the player once it collides with another player.
+* When a ball collides with a player's shape, it will experience an elastic collision and bounce off of the player.
+	* The player's rotational velocity will be applied to the ball, causing it to bounce off of the player at a higher velocity.
