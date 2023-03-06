@@ -10,4 +10,8 @@ The game was created using the [Godot engine](https://godotengine.org/). The scr
 
 The game engine was chosen due to its relative ease of use and UI editing capabilities.
 
-## 
+## Next steps
+
+The game in its current state is unfinished, there are bugs everywhere and the user interface is not the prettiest it could be.
+
+Originally we were planning for much more to be in the game, such as more elastic collisions between players and a much more dramatic death. However, due to time constraints we were unable to implement these, but it will definitely be our priority when we decide to revisit the game.
