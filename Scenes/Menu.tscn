@@ -37,6 +37,13 @@ margin_right = 291.0
 margin_bottom = 68.0
 text = "Quit"
 
+[node name="Label" type="Label" parent="."]
+margin_left = 919.0
+margin_top = 304.0
+margin_right = 1019.0
+margin_bottom = 318.0
+text = "Shape Sifters"
+
 [connection signal="pressed" from="VBoxContainer/Multiplayer" to="VBoxContainer" method="_on_Multiplayer_pressed"]
 [connection signal="pressed" from="VBoxContainer/How to play" to="VBoxContainer" method="_on_how_to_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit" to="VBoxContainer" method="_on_Quit_pressed"]
