@@ -34,7 +34,8 @@ func _connected_to_server():
 	Global.instance_client_ball(client_ball)
 
 func _server_disconnected():
-	for n in Players.get_children():
+	var children = Players.get_children()
+	for n in children:
 		Players.remove_child(n)
 		n.queue_free()
 	get_tree().change_scene("res://Scenes/Server Menu.tscn")
