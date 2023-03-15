@@ -28,5 +28,7 @@ shape = SubResource( 1 )
 wait_time = 0.03
 autostart = true
 
+[node name="Tween" type="Tween" parent="."]
+
 [connection signal="body_entered" from="." to="." method="_on_Ball_body_entered"]
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_network_tick_rate_timeout"]
