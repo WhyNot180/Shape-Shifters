@@ -27,7 +27,9 @@ func _ready():
 func _integrate_forces(state):
 	if not tween.is_active():
 		state.add_central_force(puppet_ball_velocity)
-		state
+	if state.get_contact_count() > 0:
+		puppet_ball_velocity.bounce(state.get_contact_local_normal(0))
+		state.apply_central_impulse(-puppet_ball_velocity*1.5)
 
 func _on_Ball_body_entered(body):
 	#if is_network_master():
