@@ -27,7 +27,7 @@ func _Stopwatch_timeout():
 					amount_sides += 1
 					rpc("change_sides", amount_sides)
 				1:
-					gravity += 50
+					gravity += 80
 					rpc("change_gravity", gravity)
 				_:
 					print("entered default")
