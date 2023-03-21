@@ -20,7 +20,7 @@ func _connection_failed():
 	loading_text.visible = true
 
 func _on_Join_Server_pressed():
-	if (1024 <= get_node("Join/Port").text.to_int()) && get_node("Join/Port").text.to_int() <= 65535:
+	if (1024 <= get_node("Join Menu/Join/Port").text.to_int()) && get_node("Join Menu/Join/Port").text.to_int() <= 65535:
 		loading_arrow.visible = true
 		loading_text.text = "Loading..."
 		loading_text.visible = true
@@ -31,9 +31,9 @@ func _on_Join_Server_pressed():
 
 
 func _on_Create_Server_pressed():
-	if get_node("Host/Number of players").text != "" && ((1024 <= get_node("Host/Port").text.to_int()) && get_node("Host/Port").text.to_int() <= 65535):
-		Lobby.port = get_node("Host/Port").text.to_int()
-		Lobby.number_of_players = get_node("Host/Number of players").text.to_int()
+	if get_node("Host Menu/Host/Number of players").text != "" && ((1024 <= get_node("Host Menu/Host/Port").text.to_int()) && get_node("Host Menu/Host/Port").text.to_int() <= 65535):
+		Lobby.port = get_node("Host Menu/Host/Port").text.to_int()
+		Lobby.number_of_players = get_node("Host Menu/Host/Number of players").text.to_int()
 		Lobby.username_text = get_node("Common/Username").text
 		Lobby._on_Create_Server()
 
