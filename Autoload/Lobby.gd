@@ -8,6 +8,7 @@ var username_text
 var port
 var number_of_players
 var ip
+var is_waiting = true
 
 func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
@@ -17,6 +18,7 @@ func _ready():
 
 func _player_connected(id):
 	if id != get_tree().get_network_unique_id():
+		is_waiting = false
 		print("Player " + str(id) + " has connected")
 		instance_player(id)
 

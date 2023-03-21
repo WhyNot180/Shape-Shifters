@@ -48,4 +48,6 @@ func _server_disconnected():
 
 func _connection_failed():
 	Lobby._server_disconnected()
+	
+	get_tree().current_scene.emit_signal("failed_to_connect")
 	print("failed")

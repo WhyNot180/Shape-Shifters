@@ -217,6 +217,9 @@ func _on_player_died(new_value):
 	#hide all the line segments (this should also disable their collisions)
 	call_deferred("hide_all_segments")
 	
+	if is_network_master():
+		get_tree().current_scene.emit_signal("game_over")
+	
 	#DO NOT DELETE THE PLAYER!! It causes a race condition with the collision detection on the ball
 	# The players will all be deleted on disconnecting
 

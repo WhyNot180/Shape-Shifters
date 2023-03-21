@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes/UI Scripts/Server Menu.gd" type="Script" id=1]
+[ext_resource path="res://Load Arrow.png" type="Texture" id=2]
 
 [node name="Server Menu" type="Control"]
 anchor_right = 1.0
@@ -8,27 +9,29 @@ anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="Host" type="VBoxContainer" parent="."]
-anchor_left = 0.254
+anchor_left = 0.243
 anchor_top = 0.422
-anchor_right = 0.357
+anchor_right = 0.373
 anchor_bottom = 0.505
 
 [node name="Number of players" type="LineEdit" parent="Host"]
-margin_right = 197.0
+margin_right = 249.0
 margin_bottom = 24.0
+align = 1
 placeholder_text = "Maximum number of players"
-placeholder_alpha = 0.233
+placeholder_alpha = 0.795
 
 [node name="Port" type="LineEdit" parent="Host"]
 margin_top = 28.0
-margin_right = 197.0
+margin_right = 249.0
 margin_bottom = 52.0
-placeholder_text = "Port: between 1024 and 60000"
-placeholder_alpha = 0.233
+align = 1
+placeholder_text = "Port between 1024 and 60000"
+placeholder_alpha = 0.795
 
 [node name="Create Server" type="Button" parent="Host"]
 margin_top = 56.0
-margin_right = 197.0
+margin_right = 249.0
 margin_bottom = 76.0
 text = "Create Server"
 
@@ -49,33 +52,34 @@ text = "					JOIN"
 readonly = true
 
 [node name="Join" type="VBoxContainer" parent="."]
-anchor_left = 0.715
+anchor_left = 0.694
 anchor_top = 0.422
-anchor_right = 0.804
+anchor_right = 0.829
 anchor_bottom = 0.468
 margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="Server IP" type="LineEdit" parent="Join"]
-margin_right = 210.0
+margin_right = 299.0
 margin_bottom = 24.0
 align = 1
 placeholder_text = "Server IP"
-placeholder_alpha = 0.233
+placeholder_alpha = 0.795
 __meta__ = {
 "_editor_description_": "lan connection"
 }
 
 [node name="Port" type="LineEdit" parent="Join"]
 margin_top = 28.0
-margin_right = 210.0
+margin_right = 299.0
 margin_bottom = 52.0
-placeholder_text = "Port: between 1024 and 60000"
-placeholder_alpha = 0.233
+align = 1
+placeholder_text = "Port between 1024 and 60000"
+placeholder_alpha = 0.795
 
 [node name="Join Server" type="Button" parent="Join"]
 margin_top = 56.0
-margin_right = 210.0
+margin_right = 299.0
 margin_bottom = 76.0
 text = "Join Server"
 
@@ -105,6 +109,28 @@ margin_right = 12.0
 margin_bottom = 20.0
 text = "Back"
 
+[node name="Loading_arrow" type="TextureRect" parent="."]
+visible = false
+anchor_left = 0.426
+anchor_top = 0.152
+anchor_right = 0.426
+anchor_bottom = 0.152
+rect_scale = Vector2( 0.1, 0.1 )
+rect_pivot_offset = Vector2( 174.397, 202.528 )
+texture = ExtResource( 2 )
+stretch_mode = 6
+
+[node name="Loading_text" type="Label" parent="."]
+visible = false
+anchor_left = 0.502
+anchor_top = 0.301
+anchor_right = 0.516
+anchor_bottom = 0.305
+grow_horizontal = 2
+text = "Loading..."
+align = 1
+
+[connection signal="failed_to_connect" from="." to="." method="_connection_failed"]
 [connection signal="pressed" from="Host/Create Server" to="." method="_on_Create_Server_pressed"]
 [connection signal="pressed" from="Join/Join Server" to="." method="_on_Join_Server_pressed"]
 [connection signal="pressed" from="Back Button" to="." method="_on_Back_Button_pressed"]
