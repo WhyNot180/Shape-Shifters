@@ -1,34 +1,124 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scenes/UI Scripts/Server Menu.gd" type="Script" id=1]
+[ext_resource path="res://Load Arrow.png" type="Texture" id=2]
 
 [node name="Server Menu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_top = 2.0
+margin_bottom = 2.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
-[node name="Host_label" type="TextEdit" parent="."]
-anchor_left = 0.181
-anchor_top = 0.314
-anchor_right = 0.281
-anchor_bottom = 0.341
-margin_left = 0.959991
-margin_top = -3.05176e-05
-margin_right = -0.959961
-margin_bottom = -3.05176e-05
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 1927.0
+margin_bottom = 1072.0
+color = Color( 0.360784, 0.698039, 0.843137, 0.619608 )
+
+[node name="Host Menu" type="Control" parent="."]
+anchor_left = 0.22
+anchor_top = 0.5
+anchor_right = 0.22
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = -150.0
+margin_right = 150.0
+margin_bottom = 150.0
+
+[node name="Host_label" type="TextEdit" parent="Host Menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -89.28
+margin_right = 89.28
+margin_bottom = 30.24
+custom_colors/font_color_readonly = Color( 1, 1, 1, 1 )
 text = "  			   	 HOST"
 readonly = true
 
-[node name="Join_label" type="TextEdit" parent="."]
-anchor_left = 0.724
-anchor_top = 0.312
-anchor_right = 0.817
-anchor_bottom = 0.34
+[node name="Host" type="VBoxContainer" parent="Host Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -105.0
+margin_top = -57.27
+margin_right = 105.0
+margin_bottom = 57.25
+
+[node name="Number of players" type="LineEdit" parent="Host Menu/Host"]
+margin_right = 210.0
+margin_bottom = 24.0
+align = 1
+placeholder_text = "Maximum number of players"
+placeholder_alpha = 0.461
+
+[node name="Port" type="LineEdit" parent="Host Menu/Host"]
+margin_top = 28.0
+margin_right = 210.0
+margin_bottom = 52.0
+align = 1
+placeholder_text = "Port: between 1024 and 60000"
+placeholder_alpha = 0.461
+
+[node name="Create Server" type="Button" parent="Host Menu/Host"]
+margin_top = 56.0
+margin_right = 210.0
+margin_bottom = 76.0
+text = "Create Server"
+
+[node name="Join Menu" type="Control" parent="."]
+anchor_left = 0.78
+anchor_top = 0.5
+anchor_right = 0.78
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = -150.0
+margin_right = 150.0
+margin_bottom = 150.0
+
+[node name="Join_label" type="TextEdit" parent="Join Menu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -89.28
+margin_right = 89.28
+margin_bottom = 30.24
+custom_colors/font_color_readonly = Color( 1, 1, 1, 1 )
 text = "					JOIN"
 readonly = true
+
+[node name="Join" type="VBoxContainer" parent="Join Menu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -105.0
+margin_top = -57.26
+margin_right = 105.0
+margin_bottom = 57.26
+
+[node name="Server IP" type="LineEdit" parent="Join Menu/Join"]
+margin_right = 210.0
+margin_bottom = 24.0
+align = 1
+placeholder_text = "Server IP"
+placeholder_alpha = 0.461
+__meta__ = {
+"_editor_description_": "lan connection"
+}
+
+[node name="Port" type="LineEdit" parent="Join Menu/Join"]
+margin_top = 28.0
+margin_right = 210.0
+margin_bottom = 52.0
+align = 1
+placeholder_text = "Port: between 1024 and 60000"
+placeholder_alpha = 0.461
+
+[node name="Join Server" type="Button" parent="Join Menu/Join"]
+margin_top = 56.0
+margin_right = 210.0
+margin_bottom = 76.0
+text = "Join Server"
 
 [node name="Common" type="VBoxContainer" parent="."]
 anchor_left = 0.5
@@ -47,7 +137,7 @@ grow_horizontal = 2
 align = 1
 max_length = 12
 placeholder_text = "Username"
-placeholder_alpha = 0.233
+placeholder_alpha = 0.461
 
 [node name="Back Button" type="Button" parent="."]
 anchor_left = 0.5
@@ -60,88 +150,28 @@ margin_right = 65.52
 margin_bottom = 10.0
 text = "Back"
 
-[node name="Host Menu" type="Control" parent="."]
-anchor_left = 0.22
-anchor_top = 0.5
-anchor_right = 0.22
-anchor_bottom = 0.5
-margin_left = -150.0
-margin_top = -150.0
-margin_right = 150.0
-margin_bottom = 150.0
+[node name="Loading_arrow" type="TextureRect" parent="."]
+visible = false
+anchor_left = 0.411
+anchor_top = 0.25
+anchor_right = 0.424
+anchor_bottom = 0.265
+rect_scale = Vector2( 0.1, 0.1 )
+rect_pivot_offset = Vector2( 174.397, 202.528 )
+texture = ExtResource( 2 )
+stretch_mode = 6
 
-[node name="Host" type="VBoxContainer" parent="Host Menu"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -105.0
-margin_top = -57.27
-margin_right = 105.0
-margin_bottom = 57.25
-
-[node name="Number of players" type="LineEdit" parent="Host Menu/Host"]
-margin_right = 210.0
-margin_bottom = 24.0
-placeholder_text = "Maximum number of players"
-placeholder_alpha = 0.233
-
-[node name="Port" type="LineEdit" parent="Host Menu/Host"]
-margin_top = 28.0
-margin_right = 210.0
-margin_bottom = 52.0
-placeholder_text = "Port: between 1024 and 60000"
-placeholder_alpha = 0.233
-
-[node name="Create Server" type="Button" parent="Host Menu/Host"]
-margin_top = 56.0
-margin_right = 210.0
-margin_bottom = 76.0
-text = "Create Server"
-
-[node name="Join Menu" type="Control" parent="."]
-anchor_left = 0.78
-anchor_top = 0.5
-anchor_right = 0.78
-anchor_bottom = 0.5
-margin_left = -150.0
-margin_top = -150.0
-margin_right = 150.0
-margin_bottom = 150.0
-
-[node name="Join" type="VBoxContainer" parent="Join Menu"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -105.0
-margin_top = -57.26
-margin_right = 105.0
-margin_bottom = 57.26
-
-[node name="Server IP" type="LineEdit" parent="Join Menu/Join"]
-margin_right = 210.0
-margin_bottom = 24.0
+[node name="Loading_text" type="Label" parent="."]
+visible = false
+anchor_left = 0.499
+anchor_top = 0.393
+anchor_right = 0.503
+anchor_bottom = 0.407
+grow_horizontal = 2
+text = "Connecting..."
 align = 1
-placeholder_text = "Server IP"
-placeholder_alpha = 0.233
-__meta__ = {
-"_editor_description_": "lan connection"
-}
 
-[node name="Port" type="LineEdit" parent="Join Menu/Join"]
-margin_top = 28.0
-margin_right = 210.0
-margin_bottom = 52.0
-placeholder_text = "Port: between 1024 and 60000"
-placeholder_alpha = 0.233
-
-[node name="Join Server" type="Button" parent="Join Menu/Join"]
-margin_top = 56.0
-margin_right = 210.0
-margin_bottom = 76.0
-text = "Join Server"
-
-[connection signal="pressed" from="Back Button" to="." method="_on_Back_Button_pressed"]
+[connection signal="failed_to_connect" from="." to="." method="_connection_failed"]
 [connection signal="pressed" from="Host Menu/Host/Create Server" to="." method="_on_Create_Server_pressed"]
 [connection signal="pressed" from="Join Menu/Join/Join Server" to="." method="_on_Join_Server_pressed"]
+[connection signal="pressed" from="Back Button" to="." method="_on_Back_Button_pressed"]

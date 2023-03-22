@@ -8,6 +8,7 @@ var username_text
 var port
 var number_of_players
 var ip
+var is_waiting = true
 
 func _ready():
 	get_tree().connect("network_peer_connected", self, "_player_connected")
@@ -17,6 +18,7 @@ func _ready():
 
 func _player_connected(id):
 	if id != get_tree().get_network_unique_id():
+		is_waiting = false
 		print("Player " + str(id) + " has connected")
 		instance_player(id)
 
@@ -31,10 +33,11 @@ func _connected_to_server():
 	get_tree().change_scene("res://Scenes/World.tscn")
 	instance_player(get_tree().get_network_unique_id())
 	yield(get_tree().create_timer(0.1), "timeout")
-	Global.instance_client_ball(client_ball)
+	instance_server_ball()
 
 func _server_disconnected():
-	for n in Players.get_children():
+	var children = Players.get_children()
+	for n in children:
 		Players.remove_child(n)
 		n.queue_free()
 	get_tree().change_scene("res://Scenes/Server Menu.tscn")
@@ -54,10 +57,15 @@ func instance_player(id):
 	else:
 		player_instance.username = str(id)
 
-func instance_server_ball(id):
+func instance_server_ball():
 	var ball_instance = Global.instance_node_at_location(ball, Players, Vector2(rand_range(10, 1910), rand_range(10, 200)))
 	ball_instance.name = "ball"
+	ball_instance.set_network_master(1)
+	print("set master")
 
+func instance_client_ball(client_ball):
+	var ball_instance = Global.instance_node_at_location(client_ball, Players, Vector2(rand_range(10, 1910), rand_range(10, 200)))
+	ball_instance.global_position = Balls.puppet_ball_position
 
 func _on_Create_Server():
 	Network.max_clients = number_of_players
@@ -66,4 +74,4 @@ func _on_Create_Server():
 	print(str(Network.ip_address))
 	get_tree().change_scene("res://Scenes/World.tscn")
 	instance_player(get_tree().get_network_unique_id())
-	instance_server_ball(1)
+	instance_server_ball()

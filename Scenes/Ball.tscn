@@ -10,6 +10,7 @@ bounce = 1.0
 radius = 14.83
 
 [node name="Ball" type="RigidBody2D" groups=["Ball"]]
+z_index = 1
 physics_material_override = SubResource( 2 )
 continuous_cd = 1
 contacts_reported = 1
@@ -27,6 +28,8 @@ shape = SubResource( 1 )
 [node name="Network_tick_rate" type="Timer" parent="."]
 wait_time = 0.03
 autostart = true
+
+[node name="Tween" type="Tween" parent="."]
 
 [connection signal="body_entered" from="." to="." method="_on_Ball_body_entered"]
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_network_tick_rate_timeout"]

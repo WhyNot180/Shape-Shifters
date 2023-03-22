@@ -9,7 +9,3 @@ func instance_node(node: Object, parent: Object) -> Object:
 	var node_instance = node.instance()
 	parent.add_child(node_instance)
 	return node_instance
-
-func instance_client_ball(client_ball):
-	var ball_instance = instance_node(client_ball, Players)
-	ball_instance.global_position = Balls.puppet_ball_position
