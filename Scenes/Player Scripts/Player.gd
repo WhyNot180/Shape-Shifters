@@ -10,6 +10,11 @@ var max_missing_sides = 1
 
 onready var gravity_area = get_node("GravityArea")
 onready var tween
+onready var inner_boundary = $InnerBoundary
+onready var inner_boundary_collision = $InnerBoundary/CollisionShape
+onready var inner_boundary_shape = $InnerBoundary/VisibleShape
+onready var network_timer = $Network_tick_rate
+onready var death_sound = $DeathSound
 
 var username_text = load("res://Scenes/Username.tscn")
 
@@ -24,7 +29,7 @@ export (Color) var color = Color.lightblue
 export (int) var m_radius = 40 # pixels
 export (int) var outline_width = 10 # pixels
 # making this stupidly large still doesn't do all too much
-export (float) var collision_safe_margin = 15.0 # pixels
+export (float) var collision_safe_margin = 10.0 # pixels
 export (float) var max_velocity = 400.0 # pixels/second
 export (float) var player_accel = 1000.0 # pixels/second^2
 export (float) var max_rot_velocity = 2.5 * (2 * PI) # radians/s clockwise-positive 
@@ -45,6 +50,8 @@ puppet var puppet_username_text = "" setget puppet_username_text_set
 var cur_sides: int = 3 # start at triangle
 var cur_velocity := Vector2()
 var rot_velocity := 0.0 # radians/s clockwise-positive
+
+remotesync var player_dead = false setget _on_player_died
 
 # clockwise-positive
 enum RotDir {CCW_LEFT = -1, NONE = 0, CW_RIGHT = 1}
@@ -107,6 +114,9 @@ func _ready():
 
 func _network_peer_connected(id):
 	rset_id(id, "puppet_username_text", username)
+	if player_dead:
+		print("rpc player dead")
+		rset_id(id, "player_dead", true)
 
 func username_set(new_value):
 	username = new_value
@@ -129,7 +139,7 @@ func _process(delta):
 func _physics_process(delta):
 	# add xbox controls?
 	
-	if is_network_master():
+	if is_network_master() and not player_dead:
 		var accel_dir := Vector2()
 		if Input.is_action_pressed("move_up"):
 			accel_dir.y -= 1 # y starts from top of screen
@@ -171,28 +181,60 @@ func _physics_process(delta):
 # warning-ignore:return_value_discarded
 		move_and_slide(cur_velocity) # do not multiply delta by velocity
 		rotate(rot_velocity * delta) # do multiply delta by velocity
-	else:
+	elif not player_dead:
 		rotation = lerp_angle(rotation, puppet_player_rotation, delta * 8)
 		if not tween.is_active():
 			move_and_slide(puppet_player_velocity)
 
 func _on_body_entered(body: Node):
 	if body is RigidBody2D:
-		rpc("_on_player_died")
+		rset("player_dead", true)
 
 func _on_difficulty_change(sides):
 	cur_sides = sides
 	print("changing shape")
 	_change_shape(cur_sides)
 
-remotesync func _on_player_died():
+func _on_player_died(new_value):
+	player_dead = new_value
+	
+	#disables inner boundary from being triggered again
+	print("Player died")
+	call_deferred("disable_inner_boundary")
+	
+	
+	#hides username
 	username_instance.player_following = null
 	if username_instance != null:
 		username_instance.visible = false
-	hide()
-	yield(get_tree().create_timer(1), "timeout")
-	queue_free() # delete this player
-	# do whatever necessary to show the player died here
+	
+	#disables gravity
+	gravity_area.space_override = Area2D.SPACE_OVERRIDE_DISABLED
+	set_deferred("gravity_area.get_node(\"GravityShape\").disabled", true)
+	
+	#network tick rate timer is no longer required
+	network_timer.stop()
+	
+	#hide all the line segments (this should also disable their collisions)
+	call_deferred("hide_all_segments")
+	
+	death_sound.play()
+	
+	if is_network_master():
+		get_tree().current_scene.emit_signal("game_over")
+	
+	#DO NOT DELETE THE PLAYER!! It causes a race condition with the collision detection on the ball
+	# The players will all be deleted on disconnecting
+
+func hide_all_segments():
+	for line_segment in line_segments:
+		line_segment.hide()
+
+func disable_inner_boundary():
+	inner_boundary.monitoring = false
+	inner_boundary.monitorable = false
+	inner_boundary_collision.disabled = true
+	inner_boundary_shape.visible = false
 
 func get_sides() -> int:
 	return cur_sides
@@ -218,7 +260,7 @@ func _apply_points(sides: int, point_sets: Array, polygon_points: PoolVector2Arr
 
 
 puppet func _change_hidden_sides(hidden_sides: int, network_sides: Array):
-	if get_tree().get_network_unique_id() == 1:
+	if get_tree().get_network_unique_id() == 1 and not player_dead:
 		# should never be less than 2 visible sides (or player orientation is difficult to determine)
 		assert(line_segments.size() - hidden_sides >= 2)
 		for line_segment in line_segments:
@@ -254,11 +296,12 @@ func _increase_missing_sides():
 	_change_hidden_sides(max_missing_sides, [])
 
 func _change_shape(sides: int):
-	var point_sets = _generate_line_points(sides)
-	var polygon_points = _generate_polygon_points(sides)
-	_apply_points(sides, point_sets, polygon_points)
-	_print_line_points(point_sets)
-	_print_polygon_points(polygon_points)
+	if not player_dead:
+		var point_sets = _generate_line_points(sides)
+		var polygon_points = _generate_polygon_points(sides)
+		_apply_points(sides, point_sets, polygon_points)
+		_print_line_points(point_sets)
+		_print_polygon_points(polygon_points)
 
 
 func _find_point(sides, pointID, radius) -> Vector2:

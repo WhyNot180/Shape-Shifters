@@ -12,9 +12,11 @@ export var gravity = 500
 export var elapsed_time = 0 # seconds
 
 onready var id = get_tree().get_network_unique_id()
+var shape_change_sound
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	shape_change_sound = get_parent().get_node("ShapeChangeSound")
 	start()
 
 func _Stopwatch_timeout():
@@ -26,8 +28,9 @@ func _Stopwatch_timeout():
 				0:
 					amount_sides += 1
 					rpc("change_sides", amount_sides)
+					shape_change_sound.play()
 				1:
-					gravity += 50
+					gravity += 80
 					rpc("change_gravity", gravity)
 				_:
 					print("entered default")

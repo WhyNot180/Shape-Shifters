@@ -13,6 +13,7 @@ func _ready():
 	for ip in IP.get_local_addresses():
 		if ip.begins_with("192.168.") or ip.begins_with("10.") or ip.begins_with("172.16") and not ip.ends_with(".1"):
 			ip_address = ip
+			break
 	
 	get_tree().connect("connected_to_server", self, "_connected_to_server")
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
@@ -47,4 +48,6 @@ func _server_disconnected():
 
 func _connection_failed():
 	Lobby._server_disconnected()
+	
+	get_tree().current_scene.emit_signal("failed_to_connect")
 	print("failed")
