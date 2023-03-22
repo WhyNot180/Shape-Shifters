@@ -14,6 +14,7 @@ onready var inner_boundary = $InnerBoundary
 onready var inner_boundary_collision = $InnerBoundary/CollisionShape
 onready var inner_boundary_shape = $InnerBoundary/VisibleShape
 onready var network_timer = $Network_tick_rate
+onready var death_sound = $DeathSound
 
 var username_text = load("res://Scenes/Username.tscn")
 
@@ -216,6 +217,8 @@ func _on_player_died(new_value):
 	
 	#hide all the line segments (this should also disable their collisions)
 	call_deferred("hide_all_segments")
+	
+	death_sound.play()
 	
 	if is_network_master():
 		get_tree().current_scene.emit_signal("game_over")
