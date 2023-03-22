@@ -1,9 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scenes/Ball Scripts/Ball.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/ballBlue_09.png" type="Texture" id=2]
-[ext_resource path="res://Sound/death.wav" type="AudioStream" id=3]
-[ext_resource path="res://Sound/shape change.wav" type="AudioStream" id=4]
 
 [sub_resource type="PhysicsMaterial" id=2]
 bounce = 1.0

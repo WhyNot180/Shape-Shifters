@@ -22,10 +22,10 @@ func _connection_failed():
 func _on_Join_Server_pressed():
 	if (1024 <= get_node("Join Menu/Join/Port").text.to_int()) && get_node("Join Menu/Join/Port").text.to_int() <= 65535:
 		loading_arrow.visible = true
-		loading_text.text = "Loading..."
+		loading_text.text = "Connecting..."
 		loading_text.visible = true
-		Lobby.port = get_node("Join/Port").text.to_int()
-		Lobby.ip = get_node("Join/Server IP").text
+		Lobby.port = get_node("Join Menu/Join/Port").text.to_int()
+		Lobby.ip = get_node("Join Menu/Join/Server IP").text
 		Lobby.username_text = get_node("Common/Username").text
 		Lobby._on_Join()
 
