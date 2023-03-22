@@ -117,6 +117,7 @@ position = Vector2( -1340, 0 )
 shape = SubResource( 6 )
 
 [node name="GameOver" type="VBoxContainer" parent="."]
+visible = false
 margin_left = -78.0
 margin_right = 78.0
 margin_bottom = 40.0
